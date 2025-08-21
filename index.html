@@ -10,103 +10,614 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f3f1; /* Warm neutral background */
-            color: #4a4a4a;
-        }
-        .main-nav-btn {
-            transition: all 0.3s ease;
-        }
-        .main-nav-btn.active {
-            background-color: #d1ccc6;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background-color: #d1ccc6;
-            border-radius: 2px;
-        }
-        .timeline-item {
-            position: relative;
-            width: 100%;
-            padding-left: calc(50% + 30px);
-            padding-right: 30px;
-        }
-        .timeline-item:nth-child(odd) {
-            padding-left: 30px;
-            padding-right: calc(50% + 30px);
-            text-align: right;
-        }
-        .timeline-dot {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 18px;
-            height: 18px;
-            background-color: #f5f3f1;
-            border: 3px solid #a39b90;
-            border-radius: 50%;
-            z-index: 10;
-        }
-        .timeline-item:nth-child(odd) .timeline-content {
-            align-items: flex-end;
-        }
-        #reader-panel {
-            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        #reader-panel.active {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        #reader-overlay {
-            transition: opacity 0.4s ease-in-out;
-        }
-        .audio-progress-bar {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 8px;
-            background: #d1ccc6;
-            outline: none;
-            opacity: 0.7;
-            transition: opacity .2s;
-            border-radius: 4px;
-        }
-        .audio-progress-bar::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #877d72;
-            cursor: pointer;
-            border-radius: 50%;
-        }
+/* === ZÁKLADNÍ STYLY === */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #e0e6ed;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Jemný sci-fi efekt - hvězdy na pozadí */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+        radial-gradient(2px 2px at 40px 70px, #ffffff, transparent),
+        radial-gradient(1px 1px at 90px 40px, #ffffff, transparent),
+        radial-gradient(1px 1px at 130px 80px, #ffffff, transparent),
+        radial-gradient(2px 2px at 160px 30px, #ffffff, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    opacity: 0.3;
+    z-index: -1;
+    animation: twinkle 10s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.1; }
+}
+
+/* === NAVIGACE === */
+.main-nav-btn {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e6ed;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.main-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.main-nav-btn.active {
+    background: rgba(64, 224, 255, 0.2);
+    border-color: #40e0ff;
+    color: #40e0ff;
+    font-weight: 600;
+    box-shadow: 0 0 20px rgba(64, 224, 255, 0.3);
+}
+
+/* === ČASOVÁ OSA === */
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px 20px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #40e0ff, #0099cc, #40e0ff);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(64, 224, 255, 0.5);
+}
+
+.timeline-item {
+    position: relative;
+    width: 100%;
+    padding-left: calc(50% + 40px);
+    padding-right: 30px;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: slideInFromRight 0.8s ease-out forwards;
+}
+
+.timeline-item:nth-child(odd) {
+    padding-left: 30px;
+    padding-right: calc(50% + 40px);
+    text-align: right;
+    animation: slideInFromLeft 0.8s ease-out forwards;
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #40e0ff, #0099cc);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(64, 224, 255, 0.6);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(64, 224, 255, 0.6); }
+    50% { box-shadow: 0 0 25px rgba(64, 224, 255, 0.8); }
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.timeline-content h3,
+.timeline-content h4 {
+    color: #ffffff !important;
+    text-shadow: 0 0 15px rgba(64, 224, 255, 0.6), 
+                 0 0 30px rgba(64, 224, 255, 0.3),
+                 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    margin-bottom: 15px;
+}
+
+.timeline-content p {
+    color: #f0f4f8 !important;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.timeline-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(64, 224, 255, 0.3);
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    align-items: flex-end;
+}
+
+/* === ČTEČKA === */
+#reader-panel {
+    transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), 
+                opacity 0.4s ease-in-out;
+    transform: translateX(100%);
+    opacity: 0;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+#reader-panel.active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+#reader-overlay {
+    transition: opacity 0.4s ease-in-out;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+/* === AUDIO OVLÁDÁNÍ === */
+.audio-progress-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.audio-progress-bar:hover {
+    opacity: 1;
+}
+
+.audio-progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #40e0ff, #0099cc);
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(64, 224, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+.audio-progress-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(64, 224, 255, 0.8);
+}
+
+.audio-progress-bar::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #40e0ff, #0099cc);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 0 10px rgba(64, 224, 255, 0.5);
+}
+
+ 
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    padding: 20px 0 15px 0;
+    margin: 0;
+    letter-spacing: 0.5px;
+    
+    color: red;
+     
+}
+
+p {
+    text-align: left;
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 15px 0;
+    font-weight: 400;
+}
+
+/* === MEDIA QUERIES === */
+
+/* Velmi velké monitory (1920px+) */
+@media (min-width: 1920px) {
+    body {
+        font-size: 18px;
+    }
+    
+    h1 {
+        font-size: 3.5rem;
+    }
+    
+    h2 {
+        font-size: 2.2rem;
+    }
+    
+    p {
+        font-size: 1.3rem;
+    }
+    
+    .timeline {
+        max-width: 1400px;
+    }
+    
+    .timeline-content {
+        padding: 35px;
+    }
+}
+
+/* Desktop (1200px - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .timeline {
+        max-width: 1200px;
+    }
+    
+    .main-nav-btn {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Menší desktop a tablety na šířku (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+    
+    h2 {
+        font-size: 1.6rem;
+    }
+    
+    p {
+        font-size: 1rem;
+    }
+    
+    .timeline {
+        max-width: 900px;
+    }
+    
+    .timeline-item {
+        padding-left: calc(50% + 30px);
+        padding-right: 20px;
+    }
+    
+    .timeline-item:nth-child(odd) {
+        padding-left: 20px;
+        padding-right: calc(50% + 30px);
+    }
+}
+
+/* Tablety na výšku (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    p {
+        font-size: 1rem;
+    }
+    
+    .main-nav-btn {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 0.95rem;
+    }
+    
+    .timeline {
+        max-width: 700px;
+        padding: 30px 15px;
+    }
+    
+    .timeline-content {
+        padding: 20px;
+    }
+    
+    .timeline-item {
+        margin-bottom: 40px;
+    }
+}
+
+/* Mobilní zařízení (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    body {
+        font-size: 16px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+        padding: 15px 0 10px 0;
+    }
+    
+    p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .main-nav-btn {
+        padding: 8px 16px;
+        margin: 4px;
+        font-size: 0.9rem;
+    }
+    
+    /* Mobilní časová osa - jednosloupcová */
+    .timeline::before {
+        left: 30px;
+    }
+    
+    .timeline-item,
+    .timeline-item:nth-child(odd) {
+        padding-left: 60px;
+        padding-right: 20px;
+        text-align: left;
+        margin-bottom: 30px;
+    }
+    
+    .timeline-dot {
+        left: 30px;
+        top: 25px;
+    }
+    
+    .timeline-content {
+        padding: 15px;
+    }
+    
+    #reader-panel {
+        width: 100% !important;
+        height: 100% !important;
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        transform: translateY(100%);
+    }
+    
+    #reader-panel.active {
+        transform: translateY(0);
+    }
+}
+
+/* Malé mobilní zařízení (do 575px) */
+@media (max-width: 575px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    h2 {
+        font-size: 1.2rem;
+        padding: 10px 0;
+    }
+    
+    p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 10px 0;
+    }
+    
+    .main-nav-btn {
+        padding: 6px 12px;
+        margin: 3px;
+        font-size: 0.85rem;
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 5px auto;
+    }
+    
+    .timeline {
+        padding: 20px 10px;
+    }
+    
+    .timeline::before {
+        left: 20px;
+    }
+    
+    .timeline-item,
+    .timeline-item:nth-child(odd) {
+        padding-left: 50px;
+        padding-right: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .timeline-dot {
+        left: 20px;
+        width: 16px;
+        height: 16px;
+        top: 20px;
+    }
+    
+    .timeline-content {
+        padding: 12px;
+        border-radius: 8px;
+    }
+    
+    .audio-progress-bar {
+        height: 6px;
+    }
+    
+    .audio-progress-bar::-webkit-slider-thumb {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Velmi malé obrazovky (do 360px) */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+    }
+    
+    p {
+        font-size: 0.85rem;
+    }
+    
+    .timeline {
+        padding: 15px 5px;
+    }
+    
+    .timeline-item,
+    .timeline-item:nth-child(odd) {
+        padding-left: 40px;
+        padding-right: 10px;
+    }
+    
+    .timeline-content {
+        padding: 10px;
+    }
+}
+
+/* === VYSOKÉ ROZLIŠENÍ A RETINA DISPLEJE === */
+@media (-webkit-min-device-pixel-ratio: 2), 
+       (min-resolution: 192dpi) {
+    body::before {
+        background-size: 400px 200px;
+    }
+    
+    .timeline-dot {
+        box-shadow: 0 0 20px rgba(64, 224, 255, 0.8);
+    }
+}
+
+/* === TMAVÝ REŽIM === */
+@media (prefers-color-scheme: dark) {
+    /* Styly jsou již navrženy pro tmavé téma */
+}
+
+/* === SVĚTLÝ REŽIM PRO UŽIVATELE S PREFERENCÍ === */
+@media (prefers-color-scheme: light) {
+    body {
+        background: linear-gradient(135deg, #f0f2f5 0%, #e8ecf0 50%, #dde4ea 100%);
+        color: #2c3e50;
+    }
+    
+    body::before {
+        opacity: 0.1;
+    }
+    
+    .timeline-content {
+        background: rgba(255, 255, 255, 0.8);
+        color: #2c3e50;
+        border: 1px solid rgba(64, 224, 255, 0.2);
+    }
+    
+    .main-nav-btn {
+        background: rgba(255, 255, 255, 0.7);
+        color: #2c3e50;
+        border: 1px solid rgba(64, 224, 255, 0.3);
+    }
+    
+    p {
+        color: #34495e;
+    }
+}
     </style>
 </head>
 <body class="antialiased">
 
     <div id="app" class="container mx-auto px-4 py-8 max-w-7xl">
         <header class="text-center mb-12">
-            <h1 class="text-5xl font-bold text-gray-800 mb-2">Star Trek: Kroniky</h1>
-            <p class="text-lg text-gray-600">Interaktivní průvodce rozsáhlým příběhem o odvaze, objevech a konfliktech.</p>
+            <h1 class="text-5xl font-bold text-gray-800 mb-2" style="color: white">Star Trek: Kroniky</h1>
+            <p class="text-lg text-gray-600" style="text-align: center; color: deeppink ">Interaktivní průvodce rozsáhlým příběhem o odvaze, objevech a konfliktech.</p>
         </header>
 
         <nav class="flex justify-center mb-10 bg-gray-200/80 rounded-full p-1 max-w-md mx-auto shadow-sm">
-            <button id="nav-arcs" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700 active">Příběhové Oblouky</button>
-            <button id="nav-timeline" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700">Časová Osa</button>
-            <button id="nav-factions" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700">Postavy a Frakce</button>
+            <button id="nav-arcs" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700 active" style="color: green">Příběhové Oblouky</button>
+            <button id="nav-timeline" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700" style="color: blue">Časová Osa</button>
+            <button id="nav-factions" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700" style="color: brown">Postavy a Frakce</button>
         </nav>
 
         <main id="main-content">
@@ -118,7 +629,7 @@
     <div id="reader-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
     <div id="reader-panel" class="fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center">
-            <h2 id="reader-title" class="text-2xl font-bold text-gray-800"></h2>
+            <h2 id="reader-title" class="text-2xl font-bold text-white-800"></h2>
             <button id="reader-close-btn" class="text-gray-500 hover:text-gray-800 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -250,8 +761,9 @@
                     currentAudio.onended = stopAudio; // Použijeme existující funkci stopAudio
 
                     currentAudio.onerror = (e) => {
-                        console.error('Chyba při načítání zvuku:', e); // Debugging
-                        readerContent.innerHTML += '<p class="text-red-500 mt-4">Chyba při načítání zvuku. Zkuste to prosím znovu.</p>';
+    console.error('Chyba při načítání zvuku:', e); // Debugging
+    readerContent.innerHTML += '<p class="text-green-500 mt-4 font-bold">Chyba při načítání zvuku. Zkuste to prosím znovu. Tato chyba vzniká z důvodu, že u některých kapitol zatím nejsou nahrávky dokončeny a stále se na nich pracuje.</p>';
+
                     };
                 } else {
                     console.warn('Kapitola ' + chapter.id + ' nemá audioSrc.'); // Debugging
@@ -315,7 +827,7 @@
 
 
         function renderStoryArcs() {
-            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-gray-700">Příběhové Oblouky</h2><p class="text-gray-500 mt-2">Prozkoumejte ságu rozdělenou do tematických celků.</p></div>';
+            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-white-700">Příběhové Oblouky</h2><p class="text-white-500 mt-2">Prozkoumejte ságu rozdělenou do tematických celků.</p></div>';
             html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">';
             storyData.arcs.forEach(arc => {
                 html += `
@@ -343,7 +855,7 @@
         }
         
         function renderTimeline() {
-            let html = '<div class="text-center mb-12"><h2 class="text-3xl font-semibold text-gray-700">Časová Osa Událostí</h2><p class="text-gray-500 mt-2">Sledujte klíčové momenty příběhu v chronologickém pořadí.</p></div>';
+            let html = '<div class="text-center mb-12"><h2 class="text-3xl font-semibold text-white-700">Časová Osa Událostí</h2><p class="text-white-500 mt-2">Sledujte klíčové momenty příběhu v chronologickém pořadí.</p></div>';
             html += '<div class="relative timeline">';
             storyData.timeline.forEach((item, index) => {
                 html += `
@@ -368,7 +880,7 @@
         }
         
         function renderFactions() {
-            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-gray-700">Postavy a Frakce</h2><p class="text-gray-500 mt-2">Seznamte se s klíčovými hráči galaktické scény.</p></div>';
+            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-white-700">Postavy a Frakce</h2><p class="text-white-500 mt-2">Seznamte se s klíčovými hráči galaktické scény.</p></div>';
             html += '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">';
             storyData.factions.forEach(faction => {
                 html += `
@@ -403,11 +915,11 @@
                 { id: 8, arc: "Válka o galaxii", title: "Spojenectví ve stínu války", audioSrc: "https://www.dropbox.com/scl/fi/cegy3xgjst70pc9jogera/kapitola-8.wav?rlkey=czij00yxulpzfjq3p4c6l1is6&st=zx5ermdd&dl=1", event: "Formování aliance s Klingony a Romulany." },
                 { id: 9, arc: "Válka o galaxii", title: "V srdci Romulanského impéria", audioSrc: "https://www.dropbox.com/scl/fi/wvetimvrg7gwakf7kbxu8/kapitola-9.wav?rlkey=7vvj77q7dwtgzcx0vu2a3wyob&st=p5326xlo&dl=1", event: "Jednání s Romulany a společný útok." },
                 { id: 10, arc: "Válka o galaxii", title: "Vzestup a pád", audioSrc: "https://www.dropbox.com/scl/fi/a6m4se7pg12x4c129tv78/kapitola-10.wav?rlkey=kemggsfyqpnku9kvws6lce85p&st=mupixzo9&dl=1", event: "Romulanská zrada a bitva o Acheron." },
-                { id: 11, arc: "Nové aliance", title: "Nové aliance", audioSrc: "https://www.dropbox.com/scl/fi/t41fohw659gwnv9ts71h9/kapitola-11.wav?rlkey=v6uqyyk8rw8zyw4h4y6qh0ejo5&st=mlu3ubum&dl=1", event: "Objevení nové civilizace a navázání spojenectví." },
+                { id: 11, arc: "Nové aliance", title: "Nové aliance", audioSrc: "https://www.dropbox.com/scl/fi/t41fohw659gwnv9ts71h9/kapitola-11.wav?rlkey=v6uqyy8rw8zyw4h4y6qh0ejo5&st=fo460y0e&dl=1", event: "Objevení nové civilizace a navázání spojenectví." },
                 { id: 12, arc: "Nové aliance", title: "Tíha minulosti", audioSrc: "https://www.dropbox.com/scl/fi/4n73i1lb7l482e2zy004e/kapitola-12.wav?rlkey=ri23n5qihx5ttn9dfbfmj4vpd&st=8rm5ekj0&dl=1", event: "Návrat Romulanů a obrana spojenců." },
                 { id: 13, arc: "Nové aliance", title: "Zteč na romulanskou loď", audioSrc: "https://www.dropbox.com/scl/fi/02ddw62zdgoplquykfxxk/kapitola-13.wav?rlkey=ni2vk119rhxxcfvn1i7mvk573&st=ndyqs0dt&dl=1", event: "Infiltrace nepřátelské lodi a finální souboj." },
                 { id: 14, arc: "Nové aliance", title: "Návrat domů a nové začátky", audioSrc: "https://www.dropbox.com/scl/fi/7pkmzepb7xosys65lcbzv/kapitola-14.wav?rlkey=dtx7omc81t6h16g9148kupxju&st=xve7bhkc&dl=1", event: "Pomoc nové civilizaci s budováním budoucnosti." },
-                { id: 15, arc: "Kronadská válka", title: "Návrat ke hvězdám", audioSrc: "https://www.dropbox.com/scl/fi/4s6ly2xvg8rcpre0ixvol/kapitola-15.wav?rlkey=i3hb22usxnczjdip1c7x2827g&st=6m0byowm&dl=1", event: "Setkání s rasou Kronadů." },
+                { id: 15, arc: "Kronadská válka", title: "Návrat ke hvězdám", audioSrc: "https://www.dropbox.com/scl/fi/4s6ly2xvg8rcpre0ixvol/kapitola-15.wav?rlkey=i3hb22usknj3jdip1c7x2827g&st=qj4wnozp&dl=1", event: "Setkání s rasou Kronadů." },
                 { id: 16, arc: "Kronadská válka", title: "Setkání s neznámem", audioSrc: "https://www.dropbox.com/scl/fi/r65pmkb4ekhukgbfvij9c/kapitola-16.wav?rlkey=fnsnui4885eh4bchjw9tpjof1&st=n5aqkqk5&dl=1", event: "Odhalení hrozby Xorathů." },
                 { id: 17, arc: "Kronadská válka", title: "Rozhodující krok", audioSrc: "https://www.dropbox.com/scl/fi/8jfywr9ysalymp1ux5njw/kapitola-17.wav?rlkey=z0xdonjugsqpes594uzlvd6ly&st=ehaur0vo&dl=1", event: "Formování aliance s Kronady." },
                 { id: 18, arc: "Kronadská válka", title: "Konflikt na obzoru", audioSrc: "https://www.dropbox.com/scl/fi/vekhzjzzs2c4zeanqe6k1/kapitola-18.wav?rlkey=ch6b9eq8702k8ayrcsae3m9ky&st=pr37gftk&dl=1", event: "Strategické plánování proti Xorathům." },
@@ -432,7 +944,27 @@
                 { id: 37, arc: "Válka strojů", title: "Nové Hrozby", audioSrc: "https://www.dropbox.com/scl/fi/futnm4de91g7h7p3wdnfi/kapitola-37.wav?rlkey=2lxjgnif2p69m05opdv8cicso&st=duwlnbvt&dl=1", event: "Útoky umělé inteligence z jiné dimenze." },
                 { id: 38, arc: "Válka strojů", title: "Společné velení", audioSrc: "https://www.dropbox.com/scl/fi/p0tzlrzqj6er1j56b7prt/kapitola-38.wav?rlkey=lnbu8a9qpvu7h3okcuh4lrvd5&st=0id8ccwb&dl=1", event: "Pokus o vyjednávání se stroji." },
                 { id: 39, arc: "Válka strojů", title: "Aliance na pokraji zkázy", audioSrc: "https://www.dropbox.com/scl/fi/brgz7nh2es7ck9ubt08yg/kapitola-39.wav?rlkey=d2svq670defuk8feoesusedip&st=sbd9ngfz&dl=1", event: "Romulanská zrada a ultimátum od strojů." },
-                { id: 40, arc: "Válka strojů", title: "Velké oslavy", audioSrc: "https://www.dropbox.com/scl/fi/jnatm6xldsffkvgbyscd9/kapitola-40.wav?rlkey=5ewmyq66dz5jkn1a6tkbj1nae&st=gl4jd6yx&dl=1", event: "Vítězství a oslavy na Deep Space Nine." }
+                { id: 40, arc: "Válka strojů", title: "Velké oslavy", audioSrc: "https://www.dropbox.com/scl/fi/jnatm6xldsffkvgbyscd9/kapitola-40.wav?rlkey=5ewmyq66dz5jkn1a6tkbj1nae&st=gl4jd6yx&dl=1", event: "Vítězství a oslavy na Deep Space Nine." },
+                
+                { id: 41, arc: "Nová Era", title: "Odkaz Hvězdné flotily", audioSrc: " ", event: "Nová era začíná" },
+                
+                { id: 42, arc: "Nová Era", title: "Temné horizonty", audioSrc: " ", event: "Náhlý signál" },
+                
+                { id: 43, arc: "Nová Era", title: "Vzestup symbiontů", audioSrc: " ", event: "Vzestup symbiontů" },
+                
+                { id: 44, arc: "Nová Era", title: "Stín Xar’Vaaků", audioSrc: " ", event: "Klid před bouří" },
+                
+                { id: 45, arc: "Nová Era 2", title: "Temnota za horizontem", audioSrc: " ", event: "Roztržená hranice" },
+                
+                { id: 46, arc: "Nová Era 2", title: "Když světlo pálí", audioSrc: " ", event: "První úder" },
+                
+                { id: 47, arc: "Nová Era 2", title: "Echo NX-01", audioSrc: " ", event: "Slabý šepot v tichu" },
+                
+                { id: 48, arc: "Nová Era 2", title: "Ozvěny a temný dar", audioSrc: " ", event: "Hluk po tichu" },
+                
+                { id: 49, arc: "Nová Era 3", title: "Stíny nad Nocturne", audioSrc: " ", event: "Mlha z dávných časů" },
+                
+                { id: 50, arc: "Nová Era 3", title: "Hranice neznáma", audioSrc: " ", event: "Tichá bouře" },
             ];
 
             // Projdeme data z rawChaptersData a doplníme je obsahem z DOMu
@@ -1476,43 +2008,43 @@
         <p>Společná flotila sestávající z lodí lidí, Xindi, Andorianů a Tellaritů se shromáždila na okraji sektoru, kde senzorové záznamy zachytily blížící se flotilu vetřelců. Byla to chvíle, na kterou se všechny rasy připravovaly – bitva, která rozhodne o osudu nejen jejich světů, ale i celého vesmíru.</p>
 
 <h2>Příchod nepřátel</h2>
-Záhy po vstupu do sektoru posádky všech lodí ucítily zvláštní změnu v prostoru. Senzační lodě vetřelců se objevily z hyperprostoru – obrovské, masivní plavidla plná zbraní, která okamžitě zahájila útok na spojeneckou flotilu. Energetické záblesky ozářily hvězdné pole, když se lodě dostaly do boje.
+<p>Záhy po vstupu do sektoru posádky všech lodí ucítily zvláštní změnu v prostoru. Senzační lodě vetřelců se objevily z hyperprostoru – obrovské, masivní plavidla plná zbraní, která okamžitě zahájila útok na spojeneckou flotilu. Energetické záblesky ozářily hvězdné pole, když se lodě dostaly do boje.
 
-„Připravit všechny zbraně!“ přikázal kapitán Archer. „Přelaďte fázové kanóny na frekvenci, kterou jsme objevili!“
+    „Připravit všechny zbraně!“ přikázal kapitán Archer. „Přelaďte fázové kanóny na frekvenci, kterou jsme objevili!“</p>
 
 <h2>Bitva začíná</h2>
 
-První střet byl zdrcující. Nepřátelské lodě měly silnější štíty a větší palebnou sílu než většina spojeneckých lodí. Ale díky novým vylepšením fázových kanónů na Enterprise a ostatních lodích byly štíty vetřelců náchylné k poškození.
+<p>První střet byl zdrcující. Nepřátelské lodě měly silnější štíty a větší palebnou sílu než většina spojeneckých lodí. Ale díky novým vylepšením fázových kanónů na Enterprise a ostatních lodích byly štíty vetřelců náchylné k poškození.
 
-Xindské lodě vedly první vlnu útoku, jejich reptiliánské a humanoidní lodě zůstávaly v čele formace, zatímco akvatici poskytovali podpůrné palby z větší dálky. Andoriani a Tellarité používali své rychlé útočné lodě, aby útočili na slabá místa nepřátelské flotily.
+    Xindské lodě vedly první vlnu útoku, jejich reptiliánské a humanoidní lodě zůstávaly v čele formace, zatímco akvatici poskytovali podpůrné palby z větší dálky. Andoriani a Tellarité používali své rychlé útočné lodě, aby útočili na slabá místa nepřátelské flotily.</p>
 
 <h2>Napětí v boji</h2>
 
-Enterprise se pohybovala mezi nepřátelskými loděmi, manévrovala kolem nebezpečných energetických paprsků. T'Pol, která analyzovala slabiny nepřátel, průběžně poskytovala strategické návrhy na přesměrování palby.
+<p>Enterprise se pohybovala mezi nepřátelskými loděmi, manévrovala kolem nebezpečných energetických paprsků. T'Pol, která analyzovala slabiny nepřátel, průběžně poskytovala strategické návrhy na přesměrování palby.
 
 „Nepřítel se stáčí k našim zadním lodím,“ varoval Malcolm Reed. „Musíme je zastavit, než se prolomí obranu!“
 
 „Vezmi to kolem nich, Trip!“ zavolal Archer na hlavního inženýra. „Musíme dostat jejich vedoucí loď.“
 
-Trip Tucker, s nervy ze železa, upravil kurz Enterprise, která prudce změnila směr a pálila na vlajkovou loď vetřelců. Kombinované palby všech spojeneckých lodí nakonec prolomily štíty nepřátel.
+    Trip Tucker, s nervy ze železa, upravil kurz Enterprise, která prudce změnila směr a pálila na vlajkovou loď vetřelců. Kombinované palby všech spojeneckých lodí nakonec prolomily štíty nepřátel.</p>
 
 <h2>Zvrat v bitvě</h2>
 
-I přes počáteční převahu nepřátel začaly společné síly získávat navrch. Xindská technologie v kombinaci s lidskou vynalézavostí a silou ostatních spojenců se ukázala být účinnou zbraní. Fázové kanóny na Enterprise zasáhly několik klíčových bodů na nepřátelské vlajkové lodi, což způsobilo exploze po celé její lodi.
+<p>I přes počáteční převahu nepřátel začaly společné síly získávat navrch. Xindská technologie v kombinaci s lidskou vynalézavostí a silou ostatních spojenců se ukázala být účinnou zbraní. Fázové kanóny na Enterprise zasáhly několik klíčových bodů na nepřátelské vlajkové lodi, což způsobilo exploze po celé její lodi.
 
 „Nepřátelská loď je silně poškozená!“ hlásila T'Pol. „Jejich štíty klesají.“
 
-Archer nechtěl promarnit příležitost. „Všechny lodě, soustřeďte palbu na vlajkovou loď! Tohle je naše šance!“
+    Archer nechtěl promarnit příležitost. „Všechny lodě, soustřeďte palbu na vlajkovou loď! Tohle je naše šance!“</p>
 
 <h2>Konec konfliktu</h2>
 
-Po několika minutách intenzivního bombardování se vlajková loď vetřelců rozpadla v obrovské explozi. Zbytek nepřátelských lodí, zmatený ztrátou velení, začal ustupovat a byl zahnán do hyperprostoru.
+             <p>Po několika minutách intenzivního bombardování se vlajková loď vetřelců rozpadla v obrovské explozi. Zbytek nepřátelských lodí, zmatený ztrátou velení, začal ustupovat a byl zahnán do hyperprostoru.</p>
 
-Společná flotila zvítězila.
+             <h2>Společná flotila zvítězila.</h2>
 
-V řídící místnosti na Enterprise zavládla úleva. Posádka se mohla konečně na chvíli zhluboka nadechnout. Kapitán Archer stál na můstku a díval se na obrazovku, kde zbyly jen trosky a unikající zbytky nepřátelské flotily.
+<p>V řídící místnosti na Enterprise zavládla úleva. Posádka se mohla konečně na chvíli zhluboka nadechnout. Kapitán Archer stál na můstku a díval se na obrazovku, kde zbyly jen trosky a unikající zbytky nepřátelské flotily.
 
-„Dokázali jsme to,“ řekl Archer s klidem v hlase. „Společně jsme zachránili naše světy.“
+    „Dokázali jsme to,“ řekl Archer s klidem v hlase. „Společně jsme zachránili naše světy.“</p>
 
 <h2>Nová éra spojenectví</h2>
 <p>
@@ -1529,35 +2061,35 @@ Na palubě Enterprise probíhalo oslavné setkání zástupců všech ras. Bylo 
         <p>Po vítězství nad záhadnými vetřelci z konce kapitoly 30 se vesmír zdánlivě uklidnil. Spojenecké flotily lidí, Xindi, Andorianů a Tellaritů byly na vrcholu svých sil. Ale mír byl krátký. Na obzoru se objevily nové konflikty – tentokrát se zapojením starých nepřátel i přátel.</p>
 
 <h2>Nové hrozby a stará spojenectví</h2>
-Krátce po skončení oslavy na palubě Enterprise přišla zpráva, která vyvolala okamžitý poplach. Klingonské lodě, které se dlouho držely v pozadí, začaly vykazovat agresivní pohyby poblíž hranic Federace. Zároveň senzorové záznamy zachytily pohyby romulanských lodí blízko neutrální zóny, což naznačovalo, že Romulané se připravují na své vlastní tahy.
+<p>Krátce po skončení oslavy na palubě Enterprise přišla zpráva, která vyvolala okamžitý poplach. Klingonské lodě, které se dlouho držely v pozadí, začaly vykazovat agresivní pohyby poblíž hranic Federace. Zároveň senzorové záznamy zachytily pohyby romulanských lodí blízko neutrální zóny, což naznačovalo, že Romulané se připravují na své vlastní tahy.
 
-Kapitan Archer, čerstvě povzbuzený úspěchem proti vetřelcům, věděl, že nastal čas jednat. „Nemůžeme dopustit, aby naše nově nabyté spojení se zhroutilo,“ řekl Archer při poradě s T'Pol, Tripem a dalšími důstojníky.
+    Kapitan Archer, čerstvě povzbuzený úspěchem proti vetřelcům, věděl, že nastal čas jednat. „Nemůžeme dopustit, aby naše nově nabyté spojení se zhroutilo,“ řekl Archer při poradě s T'Pol, Tripem a dalšími důstojníky.</p>
 
 <h2>Setkání s Klingony</h2>
 
-Enterprise byla vyslána na jednání s klingonským císařstvím, které vedl jejich nekompromisní kancléř Martok. Předpokládalo se, že Klingoni vycítí slabost Federace po jejich bitvě s vetřelci, a proto chtějí znovu posílit své pozice.
+<p>Enterprise byla vyslána na jednání s klingonským císařstvím, které vedl jejich nekompromisní kancléř Martok. Předpokládalo se, že Klingoni vycítí slabost Federace po jejich bitvě s vetřelci, a proto chtějí znovu posílit své pozice.
 
 Archer vstoupil na můstek klingonské vlajkové lodi se všemi diplomatickými náležitostmi, ale situace se rychle vyhrotila. Klingoni byli draví a trvali na tom, že Federace nyní dluží něco na oplátku za svou ochranu hranic. Po intenzivních slovních výměnách se však podařilo dosáhnout chvilkového příměří – přinejmenším zatím.
 
-„Jejich čest je nesmlouvavá, ale vidí sílu v tom, co jsme dokázali,“ řekla T'Pol po návratu na palubu Enterprise.
+    „Jejich čest je nesmlouvavá, ale vidí sílu v tom, co jsme dokázali,“ řekla T'Pol po návratu na palubu Enterprise.</p>
 
 <h2>Andoriani a obnovené přátelství</h2>
 
-Kapitán Shran, starý přítel Archera, zatím dorazil s andorianskými loděmi, aby poskytl podporu. Andoriani byli vždy loajální, i když tvrdohlaví spojenci, a teď nebylo jinak. Shran a Archer obnovili své přátelství, což posílilo vzájemné vazby mezi lidmi a Andoriany.
+<p>Kapitán Shran, starý přítel Archera, zatím dorazil s andorianskými loděmi, aby poskytl podporu. Andoriani byli vždy loajální, i když tvrdohlaví spojenci, a teď nebylo jinak. Shran a Archer obnovili své přátelství, což posílilo vzájemné vazby mezi lidmi a Andoriany.
 
-„Archeri, tentokrát nebudu sedět stranou. Andoriani jsou připraveni bojovat po tvém boku, ať už nás čeká cokoliv,“ řekl Shran odhodlaně.
+    „Archeri, tentokrát nebudu sedět stranou. Andoriani jsou připraveni bojovat po tvém boku, ať už nás čeká cokoliv,“ řekl Shran odhodlaně.</p>
 
 <h2>Hrozba Romulanů</h2>
 
-Zatímco se Federace snažila udržet křehkou rovnováhu s Klingony a Andoriany, Romulané začali odhalovat své pravé záměry. Podle senzorových záznamů připravovali Romulané obrovské flotily, které se měly zapojit do nové expanze. Romulanská taktika byla, jako vždy, založená na tajemství a klamu, což činilo situaci o to složitější.
+<p>Zatímco se Federace snažila udržet křehkou rovnováhu s Klingony a Andoriany, Romulané začali odhalovat své pravé záměry. Podle senzorových záznamů připravovali Romulané obrovské flotily, které se měly zapojit do nové expanze. Romulanská taktika byla, jako vždy, založená na tajemství a klamu, což činilo situaci o to složitější.
 
-„Romulané nikdy neukazují všechny své karty,“ řekl Archer. „Musíme být o krok napřed.“
+    „Romulané nikdy neukazují všechny své karty,“ řekl Archer. „Musíme být o krok napřed.“</p>
 
 <h2>Konečné setkání</h2>
 
-Konečné střetnutí mezi flotilami Federace, Andorianů a Romulanů bylo nevyhnutelné. Ve velké bitvě, která se odehrála na hranici Romulanského prostoru, se střetly všechny zúčastněné strany. Archer a Shran vedli společné flotily, zatímco Romulané používali své obvyklé zákeřné taktiky a maskování.
+<p>Konečné střetnutí mezi flotilami Federace, Andorianů a Romulanů bylo nevyhnutelné. Ve velké bitvě, která se odehrála na hranici Romulanského prostoru, se střetly všechny zúčastněné strany. Archer a Shran vedli společné flotily, zatímco Romulané používali své obvyklé zákeřné taktiky a maskování.
 
-Zatímco Enterprise vedla přímý útok na romulanské lodě, Archer věděl, že skutečné vítězství nepřijde jen skrze zbraně. Musel jednat diplomaticky, aby zabránil rozsáhlejší válce. Podařilo se mu navázat spojení s tajemným romulanským velitelem a po několika hodinách složitých vyjednávání dokázal zajistit dočasnou mírovou dohodu.
+    Zatímco Enterprise vedla přímý útok na romulanské lodě, Archer věděl, že skutečné vítězství nepřijde jen skrze zbraně. Musel jednat diplomaticky, aby zabránil rozsáhlejší válce. Podařilo se mu navázat spojení s tajemným romulanským velitelem a po několika hodinách složitých vyjednávání dokázal zajistit dočasnou mírovou dohodu.</p>
 
 <h2>Nová éra spolupráce?</h2>
 <p>
@@ -1571,30 +2103,30 @@ Po bitvě se situace začala uklidňovat. Bylo dosaženo křehkého příměří
         <p>Po dramatických událostech s Klingony, Andoriany a Romulany, které se odehrály v předchozích kapitolách, byl prostor Federace stále v napětí. Navzdory tomu, že se povedlo zajistit křehké příměří, nebylo jasné, jak dlouho mír vydrží. Právě v tomto okamžiku se cesty dvou nejslavnějších lodí Hvězdné flotily měly protnout: Voyager, který se po dlouhé cestě skrze Delta kvadrant konečně vrátil domů, a Enterprise-D, která byla ikonou vesmíru i po zničení své původní verze.</p>
 
 <h2>Náhlá anomálie</h2>
-Enterprise-D pod velením kapitána Jean-Luca Picarda se vracela z diplomatické mise, když senzorové záznamy detekovaly zvláštní prostorovou anomálii poblíž jejich trasy. Na první pohled to vypadalo jako běžná subprostorová deformace, ale hlubší analýza ukázala, že tato anomálie vede k Delta kvadrantu.
+<p>Enterprise-D pod velením kapitána Jean-Luca Picarda se vracela z diplomatické mise, když senzorové záznamy detekovaly zvláštní prostorovou anomálii poblíž jejich trasy. Na první pohled to vypadalo jako běžná subprostorová deformace, ale hlubší analýza ukázala, že tato anomálie vede k Delta kvadrantu.
 
 „To nemůže být náhoda,“ zamyslel se Picard. „Po všech těch letech, kdy Voyager prošel peklem, by to mohl být signál odkazující na nevyřešenou záhadu.“
 
-Enterprise-D se rozhodla prozkoumat anomálii a přitom obdržela zprávu od Voyageru, nyní pod velením admirála Kathryn Janewayové, která byla nedaleko na misi pro Hvězdnou flotilu. Obě lodě se dohodly, že se setkají a společně anomálii vyšetří.
+    Enterprise-D se rozhodla prozkoumat anomálii a přitom obdržela zprávu od Voyageru, nyní pod velením admirála Kathryn Janewayové, která byla nedaleko na misi pro Hvězdnou flotilu. Obě lodě se dohodly, že se setkají a společně anomálii vyšetří.</p>
 
 <h2>Setkání ikon</h2>
-Když se Voyager a Enterprise-D setkaly poblíž anomálie, pohled na obě lodě byl působivý. Na jedné straně moderní, zrekonstruovaný Voyager s technologií přivezenou z Delta kvadrantu, na straně druhé elegantní, mohutná Enterprise-D, symbol Hvězdné flotily. Posádky obou lodí byly nadšené z možnosti spolupracovat, přičemž každý z členů měl k oběma lodím vlastní vzpomínky.
+<p>Když se Voyager a Enterprise-D setkaly poblíž anomálie, pohled na obě lodě byl působivý. Na jedné straně moderní, zrekonstruovaný Voyager s technologií přivezenou z Delta kvadrantu, na straně druhé elegantní, mohutná Enterprise-D, symbol Hvězdné flotily. Posádky obou lodí byly nadšené z možnosti spolupracovat, přičemž každý z členů měl k oběma lodím vlastní vzpomínky.
 
 Kapitán Picard a admirála Janewayová vedli strategickou poradu na palubě Enterprise-D. „Vypadá to, že tato anomálie je něčím víc než jen deformací prostoru. Může to být spojení s technologií, na kterou jsme narazili během našich cest,“ řekla Janewayová s pohledem na obrazovku s daty.
 
-„Pokud se nemýlím, tato anomálie může být klíčem k něčemu většímu. Mohli bychom čelit hrozbě z Delta kvadrantu, kterou jsme dosud nezjistili,“ dodal Picard.
+    „Pokud se nemýlím, tato anomálie může být klíčem k něčemu většímu. Mohli bychom čelit hrozbě z Delta kvadrantu, kterou jsme dosud nezjistili,“ dodal Picard.</p>
 
 <h2>První průzkum</h2>
-Obě lodě se rozhodly vyslat společný průzkumný tým, složený z nejlepších důstojníků z obou posádek. Sedmá z devíti z Voyageru a Data z Enterprise-D se ukázali jako klíčoví členové, kteří měli analyzovat zvláštní energetické výboje z anomálie.
+<p>Obě lodě se rozhodly vyslat společný průzkumný tým, složený z nejlepších důstojníků z obou posádek. Sedmá z devíti z Voyageru a Data z Enterprise-D se ukázali jako klíčoví členové, kteří měli analyzovat zvláštní energetické výboje z anomálie.
 
 „Tyto výboje mají podobnost s Borgskou technologií,“ řekla Sedmá z devíti, když zkoumala energetické pole. Data souhlasil, ale doplnil: „Ano, ale jejich struktura je odlišná. Mohlo by jít o hybrid mezi Borgskou a nějakou neznámou technologií.“
 
-Průzkumný tým byl vtažen do anomálie, což odhalilo pravdu: šlo o portál do neznámé části vesmíru, která byla kdysi obývána záhadnou civilizací, jež byla ve válce s Borgy. Tato civilizace zanechala po sobě technologie, které mohly zcela změnit rovnováhu sil ve vesmíru.
+    Průzkumný tým byl vtažen do anomálie, což odhalilo pravdu: šlo o portál do neznámé části vesmíru, která byla kdysi obývána záhadnou civilizací, jež byla ve válce s Borgy. Tato civilizace zanechala po sobě technologie, které mohly zcela změnit rovnováhu sil ve vesmíru.</p>
 
 <h2>Nová aliance</h2>
-Voyager a Enterprise-D musely okamžitě jednat, protože anomálie se začala destabilizovat. Janewayová a Picard rychle přijali strategii kombinující obě lodě, aby zajistili stabilitu anomálie a získali přístup k prastaré technologii dřív, než by ji mohli použít jejich nepřátelé, včetně Borgů.
+<p>Voyager a Enterprise-D musely okamžitě jednat, protože anomálie se začala destabilizovat. Janewayová a Picard rychle přijali strategii kombinující obě lodě, aby zajistili stabilitu anomálie a získali přístup k prastaré technologii dřív, než by ji mohli použít jejich nepřátelé, včetně Borgů.
 
-„Je to riskantní, ale je to naše jediná šance,“ řekla Janewayová. „Musíme použít tu technologii, než se dostane do špatných rukou.“
+    „Je to riskantní, ale je to naše jediná šance,“ řekla Janewayová. „Musíme použít tu technologii, než se dostane do špatných rukou.“</p>
 
 <h2>Závěr</h2>
 <p>Po těžkém boji s časem se obě lodě spojily a úspěšně získaly kontrolu nad technologií. Anomálie byla stabilizována a hrozba Borgů byla prozatím odvrácena. Obě posádky se rozloučily, s nadějí, že toto nebude jejich poslední setkání.</p>
@@ -1603,38 +2135,38 @@ Voyager a Enterprise-D musely okamžitě jednat, protože anomálie se začala d
         
         <h2>Kapitola XXXIII: Návrat Enterprise NX-01</h2>
         
-        <p>Po dramatických událostech, kdy Voyager a Enterprise-D úspěšně stabilizovaly anomálii a získaly kontrolu nad prastarou technologií, nastal klid. Avšak tento klid nebyl na dlouho. Obě lodě dostaly nouzový signál ze zapomenuté části prostoru, kde podle historických záznamů měla kdysi operovat Enterprise NX-01 – loď pod velením kapitána Jonathana Archera, která položila základy Hvězdné flotily.
+        <p>Po dramatických událostech, kdy Voyager a Enterprise-D úspěšně stabilizovaly anomálii a získaly kontrolu nad prastarou technologií, nastal klid. Avšak tento klid nebyl na dlouho. Obě lodě dostaly nouzový signál ze zapomenuté části prostoru, kde podle historických záznamů měla kdysi operovat Enterprise NX-01 – loď pod velením kapitána Jonathana Archera, která položila základy Hvězdné flotily.</p>
 
 <h2>Neočekávaný signál</h2>
-Enterprise-D a Voyager byly už na cestě zpět na základnu, když na jejich komunikační panel dorazil signál. Byl starý, opotřebovaný časem, ale jasně nesl kód, který patřil Enterprise NX-01. Jak je to možné? Loď NX-01 byla oficiálně deaktivována před více než dvěma stoletími. Co se to děje?
+<p>Enterprise-D a Voyager byly už na cestě zpět na základnu, když na jejich komunikační panel dorazil signál. Byl starý, opotřebovaný časem, ale jasně nesl kód, který patřil Enterprise NX-01. Jak je to možné? Loď NX-01 byla oficiálně deaktivována před více než dvěma stoletími. Co se to děje?
 
-Kapitán Picard a admirál Janewayová byli překvapeni, ale také zvědaví. „Musíme to prozkoumat. Pokud je tam venku loď NX-01, musíme zjistit, co se stalo,“ rozhodl Picard. Voyager a Enterprise-D znovu změnily kurz, tentokrát směrem k místu, odkud signál pocházel.
+    Kapitán Picard a admirál Janewayová byli překvapeni, ale také zvědaví. „Musíme to prozkoumat. Pokud je tam venku loď NX-01, musíme zjistit, co se stalo,“ rozhodl Picard. Voyager a Enterprise-D znovu změnily kurz, tentokrát směrem k místu, odkud signál pocházel.</p>
 
 <h2>Ztracená loď</h2>
-Když dorazili na souřadnice, spatřili neuvěřitelné – stará, téměř legendární loď Enterprise NX-01 plula opuštěně ve vesmíru. Navzdory opotřebení a stáří vypadala stále funkční, jako by čekala na návrat své posádky.
+<p>Když dorazili na souřadnice, spatřili neuvěřitelné – stará, téměř legendární loď Enterprise NX-01 plula opuštěně ve vesmíru. Navzdory opotřebení a stáří vypadala stále funkční, jako by čekala na návrat své posádky.
 
 Posádky Voyageru a Enterprise-D byly ohromené. Bylo to, jako kdyby se čas zastavil a oni se dívali na jednu z nejstarších lodí Hvězdné flotily. Z historických záznamů věděli, že NX-01 zmizela při poslední misi, kde se pokoušela objevit vzdálené kolonie, a nikdy nebyla nalezena.
 
-„To je neuvěřitelné,“ pronesl Data, když analyzoval loď. „Navzdory stáří jsou systémy NX-01 stále funkční. Zdá se, že se ocitla v časovém zlomu, který zpomalil její stárnutí.“
+    „To je neuvěřitelné,“ pronesl Data, když analyzoval loď. „Navzdory stáří jsou systémy NX-01 stále funkční. Zdá se, že se ocitla v časovém zlomu, který zpomalil její stárnutí.“</p>
 
 <h2>Spojení tří generací</h2>
-Posádky obou lodí se rozhodly vyslat výsadek na palubu NX-01. Mezi nimi byla Sedmá z devíti, Data, Harry Kim a William Riker. Když vstoupili na palubu, byla atmosféra na lodi tichá, téměř posvátná. Vše vypadalo, jako by loď byla připravena okamžitě pokračovat ve své misi. Ale kdo ji opustil? A proč?
+<p>Posádky obou lodí se rozhodly vyslat výsadek na palubu NX-01. Mezi nimi byla Sedmá z devíti, Data, Harry Kim a William Riker. Když vstoupili na palubu, byla atmosféra na lodi tichá, téměř posvátná. Vše vypadalo, jako by loď byla připravena okamžitě pokračovat ve své misi. Ale kdo ji opustil? A proč?
 
 V kapitánově kajutě našli starý deník kapitána Archera. Z deníku vyplývalo, že NX-01 byla vyslána na tajnou misi, aby zkoumala neznámé technologie v oblasti, která byla považována za nebezpečnou. Archer věřil, že technologie, které objevili, by mohly být zneužity, a proto se rozhodl, že loď musí zůstat skrytá, dokud se nebude možné vrátit.
 
-„Byli uvězněni v časové anomálii a nebyli schopni se vrátit,“ řekl Riker, když četl deník.
+    „Byli uvězněni v časové anomálii a nebyli schopni se vrátit,“ řekl Riker, když četl deník.</p>
 
 <h2>Aktivace prastaré technologie</h2>
-Zatímco výsadek zkoumal NX-01, anomálie, kterou dříve stabilizovali, začala znovu vykazovat zvýšenou aktivitu. Bylo jasné, že prastará technologie, kterou získali, nějak souvisí s NX-01 a její misí.
+<p>Zatímco výsadek zkoumal NX-01, anomálie, kterou dříve stabilizovali, začala znovu vykazovat zvýšenou aktivitu. Bylo jasné, že prastará technologie, kterou získali, nějak souvisí s NX-01 a její misí.
 
-Picard a Janewayová společně rozhodli, že je čas aktivovat část technologie, kterou získali. Pokud byla NX-01 skutečně součástí větší záhady, mohlo by to odhalit, proč se jejich cesty propojily.
+    Picard a Janewayová společně rozhodli, že je čas aktivovat část technologie, kterou získali. Pokud byla NX-01 skutečně součástí větší záhady, mohlo by to odhalit, proč se jejich cesty propojily.</p>
 
 <h2>Znovu spojené lodě</h2>
-Po aktivaci technologie začaly obě lodě zaznamenávat změny v časoprostoru. Zdálo se, že NX-01 byla klíčem k rozluštění celé záhady. Loď, která byla opuštěná a ztracená po stovky let, se stala mostem mezi minulostí, přítomností a budoucností.
+<p>Po aktivaci technologie začaly obě lodě zaznamenávat změny v časoprostoru. Zdálo se, že NX-01 byla klíčem k rozluštění celé záhady. Loď, která byla opuštěná a ztracená po stovky let, se stala mostem mezi minulostí, přítomností a budoucností.
 
 „Tato loď byla svědkem počátků Hvězdné flotily a teď nám může pomoci vyřešit tajemství, které začalo už před její misí,“ zamyslel se Picard.
 
-Díky kombinovaným znalostem Voyageru, Enterprise-D a technologiím NX-01 se jim podařilo stabilizovat časoprostorovou anomálii a odhalit, že prastará civilizace, o níž se dříve dozvěděli, hrála roli v událostech, které vedly ke vzniku Hvězdné flotily.
+    Díky kombinovaným znalostem Voyageru, Enterprise-D a technologiím NX-01 se jim podařilo stabilizovat časoprostorovou anomálii a odhalit, že prastará civilizace, o níž se dříve dozvěděli, hrála roli v událostech, které vedly ke vzniku Hvězdné flotily.</p>
 
 <h2>Závěr</h2>
 <p>NX-01, Voyager a Enterprise-D spojily své síly, aby ochránily Federaci před hrozbou z minulosti, která mohla mít fatální důsledky. Kapitán Archer, i když už dávno pryč, zanechal své stopy v budoucnosti, kterou nyní chránily jeho následovníci.</p>
@@ -1643,32 +2175,32 @@ Díky kombinovaným znalostem Voyageru, Enterprise-D a technologiím NX-01 se ji
         
         <h2>Kapitola XXXIV: Tajemství prastaré civilizace</h2>
           
-        <p>Po znovusjednocení s NX-01 a vyřešení časoprostorové anomálie posádky Voyageru a Enterprise-D věřily, že jejich mise je u konce. Avšak technologie, kterou aktivovaly, začala odhalovat hlubší vrstvy záhad, jež se vázaly na prastarou civilizaci, kterou zkoumali kapitán Archer a jeho posádka. Signály ze vzdálených koutů vesmíru naznačovaly, že toto není konec, ale teprve začátek většího tajemství, které by mohlo změnit samotnou podstatu Federace.
+        <p>Po znovusjednocení s NX-01 a vyřešení časoprostorové anomálie posádky Voyageru a Enterprise-D věřily, že jejich mise je u konce. Avšak technologie, kterou aktivovaly, začala odhalovat hlubší vrstvy záhad, jež se vázaly na prastarou civilizaci, kterou zkoumali kapitán Archer a jeho posádka. Signály ze vzdálených koutů vesmíru naznačovaly, že toto není konec, ale teprve začátek většího tajemství, které by mohlo změnit samotnou podstatu Federace.</p>
 
 <h2>Podivný artefakt</h2>
-Po analýze technologií na palubě NX-01 objevil Data zvláštní artefakt skrytý hluboko v útrobách lodi. Tento artefakt byl odlišný od čehokoli, co kdy Federace viděla. Byl vytvořen z materiálu, který nereagoval na žádné známé formy energie. Byl to klíč k něčemu většímu – technologii, která byla mimo chápání současné vědy.
+<p>Po analýze technologií na palubě NX-01 objevil Data zvláštní artefakt skrytý hluboko v útrobách lodi. Tento artefakt byl odlišný od čehokoli, co kdy Federace viděla. Byl vytvořen z materiálu, který nereagoval na žádné známé formy energie. Byl to klíč k něčemu většímu – technologii, která byla mimo chápání současné vědy.
 
-„Mám podezření, že tento artefakt byl příčinou ztráty NX-01,“ přemýšlel Data nahlas. „Kapitán Archer musel vědět, že je to příliš nebezpečné na to, aby to zůstalo v rukou jakékoli civilizace.“
+    „Mám podezření, že tento artefakt byl příčinou ztráty NX-01,“ přemýšlel Data nahlas. „Kapitán Archer musel vědět, že je to příliš nebezpečné na to, aby to zůstalo v rukou jakékoli civilizace.“</p>
 
 <h2>Propojení mezi generacemi</h2>
-Kapitán Picard a admirál Janewayová se sešli, aby prodiskutovali další postup. Rozhodli se, že artefakt je natolik důležitý, že ho musí dopravit na nejbližší vědeckou základnu Federace. Avšak než stačili učinit jakékoli kroky, začal artefakt vyzařovat neznámou formu energie, která okamžitě způsobila chaos na všech třech lodích.
+<p>Kapitán Picard a admirál Janewayová se sešli, aby prodiskutovali další postup. Rozhodli se, že artefakt je natolik důležitý, že ho musí dopravit na nejbližší vědeckou základnu Federace. Avšak než stačili učinit jakékoli kroky, začal artefakt vyzařovat neznámou formu energie, která okamžitě způsobila chaos na všech třech lodích.
 
-Enterprise-D, Voyager a NX-01 se ocitly v gravitačním poli, které je táhlo směrem k neznámému bodu ve vesmíru. Ukázalo se, že artefakt byl nejen technologickým zařízením, ale i navigačním majákem, který přitahoval lodě k tajemné lokaci. Bez možnosti úniku nezbylo nic jiného než následovat tento osud.
+    Enterprise-D, Voyager a NX-01 se ocitly v gravitačním poli, které je táhlo směrem k neznámému bodu ve vesmíru. Ukázalo se, že artefakt byl nejen technologickým zařízením, ale i navigačním majákem, který přitahoval lodě k tajemné lokaci. Bez možnosti úniku nezbylo nic jiného než následovat tento osud.</p>
 
 <h2>Ztracený svět</h2>
-Po několika hodinách cestování gravitačním polem se lodě ocitly uprostřed podivné mlhoviny. Zde, skrytý po tisíce let, ležel prastarý svět plný ruin a záhadných struktur. Tým vedený Janewayovou, Picardem a Datem sestoupil na povrch planety.
+<p>Po několika hodinách cestování gravitačním polem se lodě ocitly uprostřed podivné mlhoviny. Zde, skrytý po tisíce let, ležel prastarý svět plný ruin a záhadných struktur. Tým vedený Janewayovou, Picardem a Datem sestoupil na povrch planety.
 
-Tato planeta byla kdysi domovem vysoce vyspělé civilizace, která vyvinula technologii ovládání časoprostoru. Byli to oni, kdo zanechali artefakt, který Archer objevil, a jejich technologie by mohla zničit nebo spasit galaxii – v závislosti na tom, kdo ji ovládá.
+    Tato planeta byla kdysi domovem vysoce vyspělé civilizace, která vyvinula technologii ovládání časoprostoru. Byli to oni, kdo zanechali artefakt, který Archer objevil, a jejich technologie by mohla zničit nebo spasit galaxii – v závislosti na tom, kdo ji ovládá.</p>
 
 <h2>Zkouška posádky</h2>
-Posádky Voyageru, Enterprise-D a NX-01 se musely spojit, aby rozluštily tajemství této planety a zabránily zneužití technologie. Během jejich výzkumu narazili na záznamy této civilizace, které varovaly před nebezpečím jejich vlastních vynálezů. Technologie, kterou vyvinuli, byla natolik pokročilá, že se nakonec obrátila proti nim samotným.
+<p>Posádky Voyageru, Enterprise-D a NX-01 se musely spojit, aby rozluštily tajemství této planety a zabránily zneužití technologie. Během jejich výzkumu narazili na záznamy této civilizace, které varovaly před nebezpečím jejich vlastních vynálezů. Technologie, kterou vyvinuli, byla natolik pokročilá, že se nakonec obrátila proti nim samotným.
 
-„Tato civilizace stála na prahu nekonečné moci, ale jejich pýcha je zničila,“ zamyslel se Picard, když analyzoval záznamy.
+    „Tato civilizace stála na prahu nekonečné moci, ale jejich pýcha je zničila,“ zamyslel se Picard, když analyzoval záznamy.</p>
 
 <h2>Závod s časem</h2>
-Artefakt začal destabilizovat časoprostorovou strukturu planety a lodě měly jen málo času, než bude vše nenávratně ztraceno. Posádky musely nejen najít způsob, jak deaktivovat artefakt, ale také se dostat zpět k jejich lodím, než se celá planeta zhroutí.
+<p>Artefakt začal destabilizovat časoprostorovou strukturu planety a lodě měly jen málo času, než bude vše nenávratně ztraceno. Posádky musely nejen najít způsob, jak deaktivovat artefakt, ale také se dostat zpět k jejich lodím, než se celá planeta zhroutí.
 
-Díky spolupráci mezi třemi generacemi důstojníků Hvězdné flotily se jim nakonec podařilo artefakt deaktivovat a stabilizovat časoprostor. Planeta se však začala hroutit, a tak museli urychleně evakuovat zpět na lodě.
+    Díky spolupráci mezi třemi generacemi důstojníků Hvězdné flotily se jim nakonec podařilo artefakt deaktivovat a stabilizovat časoprostor. Planeta se však začala hroutit, a tak museli urychleně evakuovat zpět na lodě.</p>
 
 <h2>Závěr</h2>
 <p>Enterprise-D, Voyager a NX-01 se úspěšně dostaly zpět do normálního vesmíru, ale záhadný artefakt byl zničen spolu s planetou. Kapitán Picard a admirál Janewayová věděli, že tajemství této prastaré civilizace budou navždy ztracena, ale také si uvědomili, jak blízko byla Federace ke zkáze.</p>
@@ -1681,34 +2213,34 @@ Díky spolupráci mezi třemi generacemi důstojníků Hvězdné flotily se jim 
         <p>Po návratu z mise s prastarým artefaktem si posádky Voyageru, Enterprise-D a NX-01 myslely, že nebezpečí je zažehnáno. Ale klid byl krátký. Trosky prastaré planety a její technologie nezmizely beze stopy, a nová, temná síla se začala formovat ve skrytých koutech vesmíru.
 
 <h2>Záhadné zmizení</h2>
-Na Federaci dopadla zpráva o zmizení několika lodí Hvězdné flotily v sektoru, kde se naposledy nacházel zničený prastarý svět. Admirál Janewayová a kapitán Picard se okamžitě pustili do zkoumání těchto událostí. Bylo zřejmé, že něco – nebo někdo – se začíná probouzet.
+<p>Na Federaci dopadla zpráva o zmizení několika lodí Hvězdné flotily v sektoru, kde se naposledy nacházel zničený prastarý svět. Admirál Janewayová a kapitán Picard se okamžitě pustili do zkoumání těchto událostí. Bylo zřejmé, že něco – nebo někdo – se začíná probouzet.
 
-„Nemůžeme to nechat být. Cítím, že zkáza prastaré civilizace měla následky, které jsme ještě nepochopili,“ zamyslel se Picard.
+    „Nemůžeme to nechat být. Cítím, že zkáza prastaré civilizace měla následky, které jsme ještě nepochopili,“ zamyslel se Picard.</p>
 
 <h2>Temná flotila</h2>
-Během další mise posádky Voyageru narazily na flotilu neznámých lodí. Tyto lodě byly neuvěřitelně pokročilé, ale zároveň vykazovaly známky prastaré technologie, kterou zkoumali v předešlé kapitole. Zdálo se, že někdo objevil trosky této civilizace a dokázal je oživit – ale s destruktivními úmysly.
+<p>Během další mise posádky Voyageru narazily na flotilu neznámých lodí. Tyto lodě byly neuvěřitelně pokročilé, ale zároveň vykazovaly známky prastaré technologie, kterou zkoumali v předešlé kapitole. Zdálo se, že někdo objevil trosky této civilizace a dokázal je oživit – ale s destruktivními úmysly.
 
-„To není jen flotila, to je armáda připravená na válku,“ varoval Chakotay, když analyzoval senzorová data.
+    „To není jen flotila, to je armáda připravená na válku,“ varoval Chakotay, když analyzoval senzorová data.</p>
 
 <h2>Setkání s nepřítelem</h2>
-Kapitán Archer na palubě NX-01 se stal prvním, kdo čelil útoku této temné flotily. Byl nečekaně napaden uprostřed rutinní mise a utrpěl vážné škody na lodi. Naštěstí se Enterprise-D a Voyager včas objevily, aby zasáhly, ale i pro ně to byla výzva. Technologie temné flotily byla příliš pokročilá.
+<p>Kapitán Archer na palubě NX-01 se stal prvním, kdo čelil útoku této temné flotily. Byl nečekaně napaden uprostřed rutinní mise a utrpěl vážné škody na lodi. Naštěstí se Enterprise-D a Voyager včas objevily, aby zasáhly, ale i pro ně to byla výzva. Technologie temné flotily byla příliš pokročilá.
 
-„Jsou moc silní. Potřebujeme strategii, jak je porazit, nebo nepřežijeme další střetnutí,“ řekl kapitán Archer po těžce vybojované bitvě.
+    „Jsou moc silní. Potřebujeme strategii, jak je porazit, nebo nepřežijeme další střetnutí,“ řekl kapitán Archer po těžce vybojované bitvě.</p>
 
 <h2>Spojenectví na hraně</h2>
-Admirál Janewayová, Picard a Archer museli vyjednat nečekané spojenectví s Andoriany, Klingony a Romulany, aby zastavili tuto hrozbu, která ohrožovala celý kvadrant. Bylo to riskantní, protože každý z těchto národů měl své vlastní zájmy, ale žádný z nich nechtěl čelit temné flotile sám.
+<p>Admirál Janewayová, Picard a Archer museli vyjednat nečekané spojenectví s Andoriany, Klingony a Romulany, aby zastavili tuto hrozbu, která ohrožovala celý kvadrant. Bylo to riskantní, protože každý z těchto národů měl své vlastní zájmy, ale žádný z nich nechtěl čelit temné flotile sám.
 
-„Pokud nebudeme spolupracovat, tato síla zničí všechny bez rozdílu,“ argumentoval Picard při vyjednávání s Romulany.
+    „Pokud nebudeme spolupracovat, tato síla zničí všechny bez rozdílu,“ argumentoval Picard při vyjednávání s Romulany.</p>
 
 <h2>Závod o přežití</h2>
-Po dlouhých diplomatických jednáních se flotily spojených sil shromáždily u hranic Federace, připravené na rozhodující bitvu. Bitva s temnou flotilou byla brutální a krvavá. Trosky lodí zaplavily vesmír a všichni čelili ztrátám, jaké si ani nedovedli představit.
+<p>Po dlouhých diplomatických jednáních se flotily spojených sil shromáždily u hranic Federace, připravené na rozhodující bitvu. Bitva s temnou flotilou byla brutální a krvavá. Trosky lodí zaplavily vesmír a všichni čelili ztrátám, jaké si ani nedovedli představit.
 
-„Tohle je skutečná válka o přežití,“ prohlásil kapitán Archer, když vedl NX-01 do středu bitvy.
+    „Tohle je skutečná válka o přežití,“ prohlásil kapitán Archer, když vedl NX-01 do středu bitvy.</p>
 
 <h2>Odhalení velitele</h2>
-Během bitvy se objevila šokující pravda – velitel temné flotily nebyl nikdo jiný než bývalý admirál Federace, který se zbláznil pod vlivem prastaré technologie. Byl přesvědčen, že ovládnutí této moci by mu dalo neomezenou vládu nad celým vesmírem.
+<p>Během bitvy se objevila šokující pravda – velitel temné flotily nebyl nikdo jiný než bývalý admirál Federace, který se zbláznil pod vlivem prastaré technologie. Byl přesvědčen, že ovládnutí této moci by mu dalo neomezenou vládu nad celým vesmírem.
 
-Picard se musel s tímto padlým admirálem postavit tváří v tvář, aby ho zastavil dříve, než by použil prastarou technologii k vyhlazení nepřátel.
+    Picard se musel s tímto padlým admirálem postavit tváří v tvář, aby ho zastavil dříve, než by použil prastarou technologii k vyhlazení nepřátel.</p>
 
 <h2>Závěr</h2>
 <p>Bitva skončila vítězstvím pro Federaci a její spojence, ale za strašlivou cenu. Mnoho lodí bylo zničeno a tisíce životů ztraceno. Temná flotila byla rozdrcena, ale hrozba prastaré technologie zůstala stále přítomná. Federace si uvědomila, že musí být ještě ostražitější než kdykoli předtím.</p>
@@ -1718,41 +2250,41 @@ Picard se musel s tímto padlým admirálem postavit tváří v tvář, aby ho z
         
         <h2>Kapitola XXXVI: Nové obzory</h2>
           
-        <p>Po těžce vybojované bitvě proti temné flotile a odhalení zrádného admirála se galaxie začala vzpamatovávat z následků války. Posádky Enterprise-D, Voyageru a NX-01 nyní čelily nové výzvě: jak udržet křehký mír, který nastal po spojenectví Federace, Klingonů, Romulanů a Andorianů.
+        <p>Po těžce vybojované bitvě proti temné flotile a odhalení zrádného admirála se galaxie začala vzpamatovávat z následků války. Posádky Enterprise-D, Voyageru a NX-01 nyní čelily nové výzvě: jak udržet křehký mír, který nastal po spojenectví Federace, Klingonů, Romulanů a Andorianů.</p>
 
 <h2>Rekonstrukce a diplomacie</h2>
-Federace okamžitě zahájila obnovu poničených lodí a planet. Bylo zřejmé, že tato válka způsobila více škod, než si všichni mysleli. Kapitán Picard dostal za úkol sjednotit všechny frakce a zahájit nová diplomatická jednání, aby se předešlo dalším konfliktům.
+<p>Federace okamžitě zahájila obnovu poničených lodí a planet. Bylo zřejmé, že tato válka způsobila více škod, než si všichni mysleli. Kapitán Picard dostal za úkol sjednotit všechny frakce a zahájit nová diplomatická jednání, aby se předešlo dalším konfliktům.
 
-„Musíme teď jednat rychle. Každé zpoždění nás může stát nejen životy, ale i naši budoucnost,“ naléhal Picard na členy Rady Federace.
+    „Musíme teď jednat rychle. Každé zpoždění nás může stát nejen životy, ale i naši budoucnost,“ naléhal Picard na členy Rady Federace.</p>
 
 <h2>Návrat domů</h2>
-Po měsících strávených ve vzdálených sektorech se Voyager konečně vracel domů. Posádka zažila nejen setkání s prastarou technologií, ale i ztráty svých přátel během bitvy. Admirál Janewayová přemýšlela o tom, jaké místo bude mít Voyager po této válce.
+<p>Po měsících strávených ve vzdálených sektorech se Voyager konečně vracel domů. Posádka zažila nejen setkání s prastarou technologií, ale i ztráty svých přátel během bitvy. Admirál Janewayová přemýšlela o tom, jaké místo bude mít Voyager po této válce.
 
-„Návrat domů je vždy těžký, když necháte kousek sebe tam venku,“ svěřila se Janewayová Chakotayovi při pohledu na domovské hvězdy.
+    „Návrat domů je vždy těžký, když necháte kousek sebe tam venku,“ svěřila se Janewayová Chakotayovi při pohledu na domovské hvězdy.</p>
 
 <h2>Tajemství vesmíru</h2>
-Posádka NX-01, pod velením kapitána Archera, dostala nový úkol: prozkoumat oblasti vesmíru, které byly dříve přístupné pouze díky prastaré technologii. Tato mise měla odhalit další záhady vesmíru, ale také pomoci najít zbývající trosky, které by mohly být hrozbou pro Federaci.
+<p>Posádka NX-01, pod velením kapitána Archera, dostala nový úkol: prozkoumat oblasti vesmíru, které byly dříve přístupné pouze díky prastaré technologii. Tato mise měla odhalit další záhady vesmíru, ale také pomoci najít zbývající trosky, které by mohly být hrozbou pro Federaci.
 
-„Máme příležitost prozkoumat neznámé kouty vesmíru. To, co objevíme, může změnit budoucnost, stejně jako to změnilo minulost,“ prohlásil Archer, když jeho loď vyrazila k nové misi.
+    „Máme příležitost prozkoumat neznámé kouty vesmíru. To, co objevíme, může změnit budoucnost, stejně jako to změnilo minulost,“ prohlásil Archer, když jeho loď vyrazila k nové misi.</p>
 
 <h2>Setkání s novým spojencem</h2>
-Při jedné z misí narazila Enterprise-D na neznámý druh, který zůstal v galaxii neodhalený po celá tisíciletí. Tento druh, známý jako Xylorijci, byl technologicky vysoce vyspělý, ale žil izolovaně na okraji galaxie. Byli fascinováni Federací a jejími ideály.
+<p>Při jedné z misí narazila Enterprise-D na neznámý druh, který zůstal v galaxii neodhalený po celá tisíciletí. Tento druh, známý jako Xylorijci, byl technologicky vysoce vyspělý, ale žil izolovaně na okraji galaxie. Byli fascinováni Federací a jejími ideály.
 
 „Nejsme tu, abychom bojovali, ale abychom sdíleli naši historii a znalosti,“ vysvětlil Picard, když se setkal s jejich vůdcem.
 
-Xylorijci se brzy stali důležitým spojencem, přinášejíc nové technologie a poznatky, které pomohly Federaci zotavit se po válce.
+    Xylorijci se brzy stali důležitým spojencem, přinášejíc nové technologie a poznatky, které pomohly Federaci zotavit se po válce.</p>
 
 <h2>Osud prastaré technologie</h2>
-Po celou dobu této mírové obnovy však Federace stále hlídala pozůstatky prastaré technologie, kterou kdysi použil temný admirál. Ačkoliv byla tato technologie nyní bezpečně uzamčena, stále existovalo nebezpečí, že by mohla být znovu použita proti mírovým silám.
+<p>Po celou dobu této mírové obnovy však Federace stále hlídala pozůstatky prastaré technologie, kterou kdysi použil temný admirál. Ačkoliv byla tato technologie nyní bezpečně uzamčena, stále existovalo nebezpečí, že by mohla být znovu použita proti mírovým silám.
 
-„Tato technologie je příliš nebezpečná na to, abychom ji jen tak nechali. Musíme najít způsob, jak ji zničit, nebo ji definitivně uložit mimo dosah kohokoliv,“ řekla Janewayová během tajného setkání s Picardem a Archerem.
+    „Tato technologie je příliš nebezpečná na to, abychom ji jen tak nechali. Musíme najít způsob, jak ji zničit, nebo ji definitivně uložit mimo dosah kohokoliv,“ řekla Janewayová během tajného setkání s Picardem a Archerem.</p>
 
 <h2>Nové naděje</h2>
-Kapitola XXXVI končí nadějí na nový začátek. Federace, posílena novými spojenci, diplomatickými úspěchy a technologickým pokrokem, byla připravena čelit dalším výzvám vesmíru. Posádky Voyageru, Enterprise-D a NX-01 se rozloučily, ale každá z nich byla připravena pokračovat ve svých misích, protože dobrodružství nikdy nekončí.
+<p>Kapitola XXXVI končí nadějí na nový začátek. Federace, posílena novými spojenci, diplomatickými úspěchy a technologickým pokrokem, byla připravena čelit dalším výzvám vesmíru. Posádky Voyageru, Enterprise-D a NX-01 se rozloučily, ale každá z nich byla připravena pokračovat ve svých misích, protože dobrodružství nikdy nekončí.
 
 „Ať už nás čeká jakýkoliv osud, vím, že společně zvládneme cokoliv,“ pronesl kapitán Picard při pohledu na hvězdnou oblohu.
 
-<p>Federace nyní hleděla do neznáma s nadějí, že vesmír je plný nevyčerpatelných možností – a že to nejlepší teprve přijde.</p>
+ Federace nyní hleděla do neznáma s nadějí, že vesmír je plný nevyčerpatelných možností – a že to nejlepší teprve přijde.</p>
     </div>
     <!-- Přidej dalších 32 kapitol -->
     <div id="chapter37" class="chapter">
@@ -1965,8 +2497,602 @@ Kapitola XXXVI končí nadějí na nový začátek. Federace, posílena novými 
 
 <p>S těmito slovy skončila kapitola 40, plná radosti, oslavy a naděje do budoucna.</p>
     </div>
+<div id="chapter41" class="chapter">
+    
+    
+    <h2> Kapitola 41: Odkaz Hvězdné flotily </h2>
 
+    <p>Po velkých oslavách na palubě se posádka Enterprise D, Voyageru a NX-01 připravovala na další cestu. Navzdory oslavám, které spojily všechny posádky a kultury, si každý uvědomoval, že vesmír má stále mnoho neprobádaných míst a nových nebezpečí.</p>
+
+    <h2>Setkání na můstku:</h2> 
+    <p>Kapitáni Archer, Picard a Janewayová se sešli, aby projednali plány na prozkoumání dosud neznámé mlhoviny, která by mohla skrývat nový zdroj energie nebo dokonce neznámý druh. Po bouřlivé diskuzi rozhodli, že bude nejlepší zůstat v kontaktu, ale každý tým půjde svou cestou.</p>
+
+    <h2>Neočekávaná zpráva od Zenfiriánů:</h2>
+    <p>Uprostřed příprav přišla neočekávaná zpráva od Zenfiriánů, kteří se nyní stali jedním z nejbližších spojenců Hvězdné flotily. Varovali, že blízko mlhoviny byla zaznamenána přítomnost mocného nepřátelského plavidla, které nepatří ani Romulanům, ani Klingonům – možná se objevuje nová hrozba.</p>
+
+    <h2>Spojenectví a dohoda:</h2>
+    <p>Posádky se proto rozhodly uzavřít dohodu o vzájemné ochraně v této oblasti. Každá loď byla vybavena technologií druhých, díky čemuž byly mnohem silnější a připravenější čelit čemukoli, co je čeká.</p>
+
+    <h2>První kontakt:</h2>
+    <p>Po několika dnech letu mlhovinou začali zaznamenávat signál od neznámé civilizace. Archer, který měl za sebou úspěšný první kontakt se Zenfiriány, se nabídl jako velvyslanec. Na povrch neznámé planety tedy přistáli členové posádky ze všech lodí, aby navázali komunikaci.</p>
+
+    <h2>Hvězdná flotila jako symbol míru:</h2>
+    <p>Při tomto kontaktu byly hodnoty Hvězdné flotily vystaveny zkoušce – nová civilizace byla technologicky na nižší úrovni a považovala cizince za hrozbu. Kapitán Picard s Archerem dokázali přesvědčit jejich vůdce o mírových úmyslech a započali tím nový příslib spolupráce.</p>
+
+    <h2>Kapitánská přísaha:</h2>
+    <p>V závěru této mise složili všichni kapitáni společnou přísahu: "Ať už se vydáme kamkoli, budeme kráčet jako jeden, vedeni touhou po poznání a míru."</p>
      </div>
+  <div id="chapter42" class="chapter">      
 
+      <h2> Kapitola 42: Temné horizonty </h2>
+
+      <p>Po úspěšné misi na neznámé planetě, která skončila vytvořením nové aliance, se posádky loďí začaly připravovat na další kroky. Nicméně, temný mrak visel nad nimi. Na okraji známého vesmíru, kdesi za hranicemi Federation, se vynořila hrozba, která se až doposud skrývala ve stínech galaktických konfliktů.</p>
+
+      <h2>Náhlý signál: </h2>
+      <p>Během pravidelných navigačních manévrů Enterprise D zachytila záhadný signál. Byl to kód, který vypadal, že obsahuje varování, ale zpráva byla šifrována a neúplná. Bylo zřejmé, že někdo nebo něco se pokoušelo komunikovat, ale nechtělo být identifikováno.</p>
+
+    <h2>Příběh o starověké rase:</h2> 
+      <p>Na palubě Voyageru, kde se nacházeli historici a vědci, byla rozluštěna část zprávy. Pocházela od neznámé rasy, která kdysi dávno žila v této oblasti. Byla vysoce pokročilá technologicky, ale zmizela z galaktické scény, když se setkala s neznámým nebezpečím. Vědci objevili zmínky o "Temných horizontách", které byly považovány za zakázané oblasti. Tyto oblasti, údajně, skrývaly starověké artefakty a technologie, ale také byly spojeny s nebezpečnými entitami.</p>
+
+    <h2>Přechod do neznámé oblasti: </h2>
+      <p>S informacemi z historie se posádky rozhodly vydat do této zapovězené oblasti. Očekávaly nástrahy, ale také nové poznání, které by mohlo pomoci jejich vesmírné flotile i celkové vědecké komunitě. Kapitán Archer, Picard a Janewayová byli jednotní v tom, že toto by mohl být klíč k nalezení nové síly v boji proti těm neznámým hrozbám, které čekaly na jejich příchod.</p>
+
+    <h2>Útok neznámého nepřítele:</h2> 
+      <p>Když se jejich flotila přiblížila k "Temným horizontům", všechny lodě byly okamžitě napadeny. Nepřítel, který byl rychlý, neviditelný a bez známé technologie, začal zasahovat do jejich plánu. Proti těmto novým hrozbám neměli posádky připravené žádné speciální obrany. Útočník se ukázal jako bytost schopná manipulovat s časem a prostorem, a tím pádem se stali posádky zmatené a zranitelné.</p>
+
+    <h2>Spojení sil:</h2> 
+      <p>Kapitánové se rychle přizpůsobili situaci. Janewayová vymyslela novou taktiku, jak použít gravitační vlny z nedaleké černé díry, aby narušily časoprostorový prostor nepřítele. Archer zase přišel s nápadem využít Zenfiriánů k vytvoření maskování flotily, což umožnilo opětovný útok. Picard, vždy klidný a rozvážný, využil diplomatických dovedností k navázání komunikace s touto neznámou hrozbou, aby pochopil její motivy a případně zjistil, zda existuje jiný způsob, jak s ní jednat.</p>
+
+    <h2>Závěrečné rozhodnutí:</h2> 
+      <p>Po intenzivní bitvě, kdy se flotila dostala do zoufalé situace, objevili posádky neznámé entity jako symbiotickou bytost, která byla po staletí uvězněná mezi dimenzemi. Místo konfrontace rozhodli kapitáni o alternativní cestě: rozhodli se vytvořit most mezi jejich světem a tímto "Temným horizontem", což vedlo k pokusům o zajištění míru.</p>
+
+      <p>Kapitán Archer, který jako první přijal tuto těžkou volbu, věděl, že to je riskantní krok. Ale stejně jako vždy, rozhodl se hledat cestu, jak posílit porozumění mezi různými civilizacemi, místo války. Tento krok by mohl znamenat revoluci v tom, jak se celé galaxie dívají na "neviditelné" nepřátele a jak je možné vnímat vesmír jako mnohem více propojený.</p>
+
+    <h2>Nový začátek:</h2> 
+      <p>Poté, co byl "Temný horizont" odhalen a nové neznámé síly byly začleněny do obrovské galaktické mozaiky, Hvězdná flotila uzavřela novou dohodu o vzájemné spolupráci mezi galaxiemi. Posádky lodi Enterprise, Voyager a NX-01, byly opět připraveny na další kroky, které je čekaly, i když teď věděli, že vesmír je mnohem širší a složitější, než si kdy představovali.</p>
+
+      <p>Tohle byl začátek něčeho většího – ať už se to týkalo nové hrozby, nebo příležitosti, které přicházely s novým poznáním. Každý člen posádky věděl, že v "Temných horizontech" je stále hodně neprozkoumaného prostoru, a že budou muset spolupracovat, aby odhalili všechny tajemství, která se ukrývají za těmi neznámými silami.</p>     
+        
+</div>
+<div id="chapter43" class="chapter">    
+    <h2> Kapitola 43: Vzestup symbiontů </h2>
+
+ 
+
+    <p>Temný vesmír nebyl tak temný, jak se zdálo. Po nespočtu nebezpečných střetů a nepochopení se objevilo nové světlo – záhadné entity, jež lidé i ostatní druhy dlouho považovali za hrozbu, se ukázaly být něčím mnohem složitějším. Byly to symbionti – inteligentní bytosti schopné splynout s jinými formami života, rozšířit jejich schopnosti a propojit mysl s vesmírem jako nikdy předtím.</p>
+
+    <h2>1. Setkání, které změnilo všechno</h2>
+
+    <p>Enterprise NX-01 se právě vracela z průzkumné mise v oblasti známé jako Temné horizonty, když byla posádka překvapena, když se na jejich senzorových</p> <p>obrazovkách objevily neznámé energetické vzory. V první chvíli to vypadalo jako záblesky nějaké nové zbraně nebo přítomnost nepřátelské flotily. Kapitán Archer však nařídil zvýšenou opatrnost a snažil se navázat kontakt.</p>
+
+    <p>Z komunikace vyplynulo, že se jedná o entity, které nemají fyzickou podobu, ale místo toho žijí jako energie a vědomí, schopné spojit se s živými organismy a vytvořit symbiózu, která by mohla změnit celý vesmír.</p>
+
+    <h2>2. Experiment s novou silou</h2>
+
+    <p>Po mnoha debatách na palubách Enterprise NX-01, Enterprise D a Voyageru se podařilo vybrat několik dobrovolníků, kteří byli ochotni se nechat spojit s těmito symbionty. T’Pol, Sedmá z Devíti a poručík Sorek byli mezi prvními.</p>
+
+    <p>Spojení bylo na počátku bolestivé – symbiont se musel synchronizovat s nervovým systémem hostitele, probíhala jakási energetická „kalibrace“. Jakmile byla úspěšná, výsledky byly ohromující:</p>
+
+    <p>Hostitelé získali zvýšenou citlivost vůči emocím a myšlenkám ostatních bytostí v okruhu desítek kilometrů.</p>
+
+    <p>Léčivé schopnosti buněk se několikanásobně zvýšily, a tak se rychleji hojily rány i chronické nemoci.</p>
+
+    <p>Vznikla schopnost krátkodobě vidět několik sekund do budoucnosti, což významně pomáhalo v bojových i krizových situacích.</p>
+
+    <h2>3. Morální a etické výzvy</h2>
+
+    <p>Jak se symbionti stávali neoddělitelnou součástí posádek, začaly vyvstávat zásadní otázky. Jak moc je bezpečné, aby lidé měli takovou moc? Neovlivní to jejich svobodu?</p>
+
+    <p>Admirál Janewayová, známá svým pragmatismem a zdravým rozumem, proto iniciovala vznik etického kodexu, který měl regulovat použití této nové síly.</p>
+
+    <p>„Síla, kterou máme, není zbraň, ale dar. Nesmíme dopustit, aby nás ovládla,“ prohlásila před členy Rady Federace.</p>
+
+    <p>Současně se řešila otázka, zda by někdo mohl být donucen k symbióze proti své vůli – toto bylo zcela zakázáno.</p>
+
+    <h2>4. Technologický průlom</h2>
+
+    <p>Symbionti navíc pomohli vědcům z Hvězdné flotily vyvinout nový druh pohonu – kvanto-fázový generátor. Tento přístroj umožnil bezpečně překonávat dosud neprozkoumané, nestabilní oblasti časoprostoru, které byly dříve zcela nepřístupné.</p>
+
+    <p>Enterprise NX-01 pojmenovala toto zařízení Zenfiriánský skokový most, na počest prvního kontaktu s entitami, které se ukázaly být klíčem k pokroku.</p>
+
+    <p>Voyager pak provedl první zkušební průchod přes nebezpečný časoprostorový tunel u hvězdy T’Maran. Výsledek? Úspěch bez jediného škrábnutí na štítu nebo strukturální poškození lodi.</p>
+
+    <h2>5. Nová hrozba – Xar’Vaakové</h2>
+
+    <p>Jen co Federace oslavila tento triumf, na obzoru se objevila nová, dosud neznámá hrozba. Z tajemných hlubin kvanto-fázových průchodů vystoupila rasa zvaná Xar’Vaak – symbiontické bytosti, které žijí tím, že vysávají životní energii jiných symbiontů a jejich hostitelů.</p>
+
+    <p>Xar’Vaakové byli agresivní, neúprosní a bez ohledu na diplomacii. Považovali novou alianci lidí a symbiontů za narušení rovnováhy vesmíru, a proto ji chtěli zničit dřív, než se stane příliš silnou.</p>
+
+    <h2>6. Příprava na konflikt</h2>
+
+    <p>Kapitán Archer rychle svolal mimořádnou konferenci mezi představiteli Hvězdné flotily, Zenfiriánů a dalších spojenců. Navrhl Trojstranný obranný pakt, který měl koordinovat společné úsilí v obraně i výzkumu.</p>
+
+    <p>Vojenské i vědecké týmy se rozdělily do skupin, které měly:</p>
+
+    <p>Zkoumat slabiny Xar’Vaaků.</p>
+
+    <p>Vytvořit nové obranné technologie s podporou symbiontů.</p>
+
+    <p>Trénovat posádky na nový druh psychického a energetického boje.</p>
+
+    <h2>7. Závěrečné myšlenky kapitoly</h2>
+
+    <p>Vesmír se znovu otevřel novým možnostem, ale také novým výzvám. Posádky tří legendárních lodí se připravovaly na nevyhnutelný střet, vědomi si, že v této hře nejde jen o přežití – ale o samotnou budoucnost života, jak ho známe.</p>
+
+    <p>Admirál Janewayová na závěr konference pronesla:</p>
+
+    <p>„Někdy musíme čelit temnotě, abychom poznali skutečnou sílu světla. Dnes je to naše odvaha, která rozhodne o tom, co přijde zítra.“</p>
+    
+    </div>
+     <div id="chapter44" class="chapter">   
+         <h2> Kapitola 44: Stín Xar’Vaaků </h2>
+
+         <h2>1. Klid před bouří</h2>
+
+<p>Vesmír byl tichý – až příliš.</p>
+<p>Tři legendární lodě Enterprise NX-01, Enterprise-D a Voyager zaujaly pozice poblíž nově vybudované stanice Aurora Prime, která se měla stát hlavním uzlem  Trojstranného obranného paktu.</p>
+<p>Od posledního setkání s Xar’Vaaky uběhlo jen pár týdnů, ale senzorové hlídky už hlásily nezvyklé anomálie v prostoru.</p>
+
+<p>Kapitán Archer si připadal, jako když stojí na palubě lodi uprostřed bezvětří, ale někde v dálce se ozývá hrom.</p>
+<p>„Tohle je ticho, které by i vesmír radši neslyšel,“ poznamenal tiše do lodního deníku.</p>
+
+         <h2>2. První náznaky invaze</h2>
+
+<p>Krátce po půlnoci palubního času se na dlouhodosahových senzorech Enterprise-D objevil stín – nebo spíš prázdnota.</p>
+<p>Byla to oblast, kde se ztrácela veškerá energie, signály mizely a prostor se choval, jako by byl požírán.</p>
+
+<p>Poručík Data okamžitě spustil analýzu:</p>
+
+<p>Elektromagnetické spektrum: nulová aktivita.</p>
+
+<p>Kvantové částice: prudký pokles.</p>
+
+<p>Životní známky: neidentifikovatelné.</p>
+
+<p>Všichni věděli, co to znamená – Xar’Vaakové jsou na cestě.</p>
+
+    <h2>3. Zrada v radě</h2>
+
+<p>Zatímco lodě připravovaly obranu, na stanici Aurora Prime probíhalo krizové zasedání.</p>
+<p>Všichni zástupci Federace, Zenfiriánů a dalších spojenců byli přítomni – ale do sálu pronikla informace, která způsobila šok:</p>
+<p>Někdo z rady předal Xar’Vaakům přesné souřadnice všech nových obranných zařízení.</p>
+
+<p>Podezření padlo na delegáta z rasy Vorth, známé pro své obchodní zájmy s pochybnými stranami.</p>
+<p>Admirál Janewayová, chladná a tvrdá jako ocel, ho konfrontovala přímo před celou radou.</p>
+<p>„Ve chvíli, kdy prodáš naši budoucnost za vlastní zisk, podepíšeš rozsudek smrti pro miliardy,“ pronesla, a její hlas se nesl sálem jako ostrá čepel.</p>
+
+<p>Delegát mlčel – až příliš dlouho. Nakonec se jeho tělo začalo deformovat a ukázalo se, že to vůbec nebyl Vorth, ale Xar’Vaakový infiltrační symbiont.</p>
+<p>Ochranka sotva stihla nasadit energetická pouta, než se bytost rozplynula v mračno černé energie a zmizela skrz ventilační šachtu.</p>
+
+    <h2>4. Symbionti proti symbiontům</h2>
+
+<p>Na Enterprise NX-01 mezitím T’Pol, Sedmá z Devíti a Sorek – hostitelé přátelských symbiontů – začali cítit zvláštní tlak v mysli.</p>
+<p>Bylo to, jako by na ně někdo klepal zevnitř jejich lebky.
+<p>Symbionti v nich varovali, že Xar’Vaakové se blíží ne fyzicky, ale psychicky – snaží se proniknout do jejich vědomí a získat kontrolu.</p>
+
+<p>Začal boj, který nebyl vidět na žádných monitorech – čistě mentální střet, kde se střídaly obrazy, pocity a emoce tak silné, že dokázaly hostiteli zastavit srdce.</p>
+
+    <h2>5. Bitva u Brány T’Maran</h2>
+
+<p>Vše vyvrcholilo u kvanto-fázové brány poblíž hvězdy T’Maran.</p>
+<p>Flotila Federace a spojenců zaujala formaci ve tvaru šípu, zatímco Xar’Vaakové se vynořili z prázdnoty prostoru.</p>
+<p>Nevypadali jako lodě – spíš jako obří roje stínových bytostí, které se seskupovaly do tvarů připomínajících plazivé chapadla.</p>
+
+    <h2>První vlna útoku:</h2>
+
+<p>Xar’Vaakové zasáhli všechny lodě najednou mentální vlnou, která způsobila, že posádky viděly halucinace.</p>
+
+<p>Na Voyageru se dokonce někteří členové snažili sabotovat vlastní systémy, protože věřili, že loď už explodovala a je třeba „uvolnit duše“.</p>
+
+    <h2>Protiútok:</h2>
+<p>Sedmá z Devíti a její symbiont dokázali vygenerovat proti-impuls, který ochránil většinu flotily, a T’Pol aktivovala Zenfiriánský skokový most, čímž se <p>podařilo odříznout část nepřátelské flotily od hlavního roje.</p>
+
+    <h2>6. Nečekaná cena vítězství</h2>
+
+<p>Bitva skončila – ne úplným vítězstvím, ale alespoň se podařilo zabránit Xar’Vaakům proniknout hlouběji do území Federace.</p>
+<p>Brána T’Maran byla poškozena a musela být deaktivována, aby ji nepřítel nemohl použít.</p>
+<p>Symbionti v hostitelích byli vyčerpaní a někteří začali vykazovat známky degenerace – jako by je samotný boj proti vlastním temným protějškům pomalu zabíjel.</p>
+
+<p>Na konci kapitoly Archer, Picard a Janeway stáli spolu na můstku Aurory Prime a dívali se na zničené lodě v přístavu.</p>
+<p>„Tohle byla jen předehra,“ řekl tiše Picard.</p>
+<p>„Pak je na čase napsat scénář k hlavnímu aktu,“ odpověděla Janewayová.</p>       
+        </div>       
+  <div id="chapter45" class="chapter">     
+      
+<h2>🖖 Kapitola 45: Temnota za horizontem</h2>
+
+<h2>1. Roztržená hranice</h2>
+
+<p>Aurora Prime se teprve vzpamatovávala z předchozí bitvy, když senzorové stanice na okraji sektoru Theta-9 zaznamenaly něco, co vypadalo jako trhlina v samotné struktuře prostoru.
+Nebyl to obyčejný subprostorový rozpad – tahle anomálie „dýchala“.
+Každých pár sekund se roztahovala a znovu stahovala, jako by za ní něco obrovského sbíralo síly k průchodu.
+
+Kapitán Archer si nechal obraz přenést na hlavní obrazovku NX-01.
+„Vypadá to, jako by se někdo snažil otevřít dveře, které vesmír nikdy nechtěl postavit,“ poznamenal.
+Data z Enterprise-D potvrdila, že trhlina rezonuje na stejné frekvenci, kterou Xar’Vaakové použili při mentálním útoku.</p> 
+
+<h2>2. Flotila v šachu</h2>
+
+<p>Picard svolal nouzovou poradu všech kapitánů.
+Problém: každá loď, která se k trhlině přiblížila na méně než 3 světelné minuty, okamžitě zaznamenala podivné „časové záchvěvy“.
+Navigační logy ukazovaly, že posádka zažila události, které se nikdy nestaly – a někdy se na můstku objevili členové posádky, kteří byli dávno mrtví.</p> 
+
+<h2>Janewayová varovala:</h2>
+<p>„Tohle není bitva o prostor, ale o realitu samotnou. Pokud nás Xar’Vaakové zatáhnou dovnitř, nebudeme bojovat proti nim – ale proti všemu, co jsme kdy mohli být.“</p> 
+
+<h2>3. Vzpoura ve stínech</h2>
+
+<p>Na Voyageru se najednou probudil infiltrační symbiont, který se podařilo zachytit po minulé bitvě.
+Byl držen v nulovém poli, ale začal vytvářet projekce – hologramy lidí, které posádka znala, včetně mrtvých přátel.
+Nešlo je odlišit od reality, dokud hologramy nezačaly šeptat posádce rozkazy.
+
+Sedmá z Devíti vtrhla do laboratoře a aktivovala Borgskou multifázovou izolaci, čímž se projekce rozpadly.
+„Tohle byla zkouška. Xar’Vaakové chtěli vidět, koho poslechneme dřív – naše kapitány, nebo naše mrtvé,“ konstatovala chladně.</p> 
+
+<h2>4. Operace „Světelný štít“</h2>
+
+<p>Federace, Zenfiriáné a Klingoni vypracovali plán:
+
+Vytvořit kolem trhliny síť fázových majáků napojených na warpové singularity, které by destabilizovaly přechod Xar’Vaaků.
+
+Aktivace musí proběhnout současně ze tří vektorů – NX-01, Enterprise-D a Klingonský bitevník T’Varok.
+
+Problém: každé plavidlo muselo proniknout přímo do gravitačního víru kolem trhliny.</p> 
+
+<h2>5. Útok z obou stran</h2>
+
+<p>Během operace se objevilo něco, co nikdo nečekal – Xar’Vaakové se neobjevili z trhliny, ale za flotilou.
+Dva roje stínových lodí začaly flotilu svírat jako kleště.
+NX-01 nasadila experimentální „fototonové pulzy“ – kombinaci fotonového torpéda a zenfiriánské světelné energie – a podařilo se prolomit první vlnu.
+
+Enterprise-D s Datem u taktiky odhalila, že Xar’Vaakové kopírují manévry lodí v reálném čase – každá taktická změna se stala pro nepřítele okamžitým plánem.
+Řešení: neudělat žádný manévr. Lodě zůstaly nehybné, a když se Xar’Vaakové přiblížili, odhalili maskované minové pole.</p> 
+
+<h2>6. Cena světla</h2>
+
+<p>Majáky se aktivovaly a trhlina se začala hroutit – ale v tu chvíli T’Pol vykřikla, že cítí, jak se jejich symbionti „přepalují“.
+Symbionti totiž přesměrovávali svou vlastní životní energii, aby majáky zůstaly stabilní.
+Sorek zůstal bezvědomý, Sedmá se sotva držela na nohou a T’Pol klesla na kolena.
+
+Trhlina se uzavřela, ale na senzorech zůstala slabá rezonance – jako ozvěna, která čeká na svůj okamžik.</p> 
+
+<h2>7. Temnota se učí</h2>
+
+<p>Na můstku Aurory Prime stáli Archer, Picard a Janeway, tentokrát mlčky.
+Na obrazovce se objevila poslední zpráva ze senzorů:
+
+„Xar’Vaakové adaptovali na světelnou energii. Příště se světlo stane jejich zbraní.“
+
+Picard sevřel ruce za zády.
+„Admirálové… právě jsme je naučili, jak nás porazit.“</p> 
+      
+      </div>
+    <div id="chapter46" class="chapter">
+        <h2>🖖 Kapitola 46: Když světlo pálí</h2>
+
+<h2>1. První úder</h2>
+
+<p>Pouhých 36 hodin po uzavření trhliny dorazily z odlehlé kolonie Xentari Prime poplašné zprávy:
+Nebe se tam rozjasnilo jako při úsvitu – ale nebylo to slunce.
+Obrovské stínové formace Xar’Vaaků vyzařovaly zářivě bílou energii, která připomínala fotonové záblesky Federace… jenže tahle světelná vlna spalovala vše živé.
+
+Kolonie byla během 4 minut tichá. Senzory zachytily pouze zbytky biologické hmoty – atomy rozptýlené v atmosféře.</p> 
+
+<h2>2. Zbraň, kterou jsme jim dali</h2>
+
+<p>V hlavní velitelské místnosti Aurory Prime probíhala porada.
+Data představil analýzu:
+
+Frekvence útoku shodná s majáky z Operace „Světelný štít“.
+
+Intenzita 312 % oproti původnímu signálu – Xar’Vaakové nejen zkopírovali zbraň, ale vylepšili ji.
+
+Účinek: okamžité narušení nervové činnosti a buněčného jádra.</p> 
+
+<h2>Janewayová se podívala na Picarda:</h2>
+<p>„Takže naše vítězství bylo jen lekcí pro nepřítele.“
+Picard přikývl. „Teď budou učitelem oni.“</p> 
+
+<h2>3. Útok na dvojí frontě</h2>
+
+<p>Flotila byla rozdělena: polovina lodí se vydala chránit další kolonie, druhá polovina zůstala v sektoru Aurory.
+Jenže Xar’Vaakové udeřili současně na obou frontách – a na každém bojišti použili odlišnou variantu světelné zbraně.
+
+U kolonie Jorath-6 vyslali pulzní verzi, která vypínala štíty lodí jako přepínač.
+V sektoru Aurory nasadili kontinuální paprsek, který se „vpíjel“ do trupu lodí a doslova rozpouštěl tritanium.
+
+NX-01 unikla jen díky manuálnímu odpojení celé části trupu – Archer vydal rozkaz odhodit sekci beta, i když v ní byla čtvrtina posádky. Tu zachránil Klingonský bitevník T’Varok, který je v poslední vteřině transportoval.</p> 
+
+<h2>4. Smrtící dilema</h2>
+
+<p>T’Pol oznámila, že jediná možná obrana proti nové zbrani je vytvořit protipaprsek – ale ten by musel být vyslán skrze symbionty.
+Problém: symbionti už jsou po poslední bitvě na hranici života.
+
+Sedmá z Devíti se postavila před velitelský stůl:
+„Pokud to uděláme, přežijeme my. Nepřežijí oni.“
+Sorek, stále zesláblý, pronesl: „Bez symbiontů budete slepí proti Xar’Vaakům. Pokud zemřeme teď, zemřete vy později.“</p> 
+
+<h2>5. Stínové zrcadlo</h2>
+
+<p>Uprostřed debaty Data zachytil zvláštní signál – vypadalo to jako kopie signatury NX-01.
+O několik minut později se na obrazovce objevila… druhá Enterprise NX-01.
+Na můstku stáli stejní lidé, jen jejich oči zářily bílým světlem.
+
+Kapitán Archer své vlastní dvojče oslovil:
+„Kdo vás poslal?“
+„Vy,“ odpověděl druhý Archer, „ze světa, kde jste to vzdali.“</p> 
+
+<h2>6. Rozkaz bez návratu</h2>
+
+        <h2>Rada kapitánů rozhodla:</h2>
+
+<p>Symbionti nasadí poslední zbytky energie k vytvoření protipaprsku.
+
+Lodě vytvoří krycí formaci kolem NX-01, která ponese hlavní impuls.
+
+Jakmile paprsek zasáhne, musí být aktivován autodestrukční protokol, aby se zabránilo zkopírování technologie.
+
+Picard zakončil poradu:
+„Tuhle bitvu možná nevyhrajeme, ale rozhodneme, jak skončí.“</p> 
+
+<h2>7. Světlo proti světlu</h2>
+
+<h2>Bitva začala.</h2>
+<p>Protipaprsek NX-01 se setkal s bílým peklem Xar’Vaaků uprostřed prázdna – a prostor se rozzářil tak, že i senzory byly na okamžik slepé.
+Zároveň se obě NX-01 střetly – ta „pravá“ a její světelné dvojče.
+Když záblesk ustal, na obrazovce Aurory Prime zůstalo jen ticho… a na senzorech žádná známka NX-01.</p> 
+    </div>
+    
+        <div id="chapter47" class="chapter">
+   <h2> Kapitola 47: Echo NX-01</h2>
+<h2>1. Slabý šepot v tichu</h2>
+
+<p>36 hodin po záblesku, když se celý sektor snažil nadechnout, senzory Aurory Prime zachytily signál — sotva zvuk, spíš ozvěna. Byl to kmitot známý posádce NX-01: tvar datového pulzu, který Archer používal pro soukromé deníkové záznamy.
+„To není signál, to je stín vzpomínky,“ pronesl Picard a oči mu zablikaly starou bolestí.</p> 
+
+<h2>2. Analýza: kvantový ozvěnový záznam</h2>
+
+<p>Data spolu s T’Polem propletli matice čidel: signál byl kvantově koherentní, ale fázově posunutý — jako by loď existovala mimo běžný tok času, ve vrstvě, která kopírovala naši realitu. Sedmá přidala pragmatický komentář: „Prakticky duch. Ale s impulzy motoru.“
+
+Závěr: NX-01 není zničená. Je uvězněná jako echo v paralelní bublině — zachycená, ale nekomunikující. A její spojení s naším světem je slabé a nestabilní.</p> 
+
+<h2>3. Plán záchrany (ne moc romantický)</h2>
+
+<p>Rada se rozhodla pro třiproudý plán:
+
+Vyslat mikro-synchronizační sondy, které by natahovaly „kvantové lanko“ k echa.
+
+Vypravit malou záchrannou výpravu — teleport + rekognizační shuttle.
+
+Použít pozůstatky symbiontů jako energetický korektor signálu (riziko: symbionti mohou zemřít).
+
+Sedmá: „Použijeme symbionty jako ladění. Nebude to hezké, ale bude to fungovat.“
+Sorek s očima upřenýma k podlaze: „Když padneme, padneme spolu.“ Archer ani nepotřeboval rozkaz.</p> 
+
+<h2>4. Vstup do bubliny — jiný NX-01</h2>
+
+<p>Shuttle se propadl fázovým oknem a vše se proměnilo v echo. Hvězdy měly jiné barvy, instrumenty vykazovaly paralelní logy a čas tekl jako špatně natočený holofilm. A tam — v dálce, obrys lodě. NX-01 stála, ale byla jiná: rýhy jako od bitev, okna bez skla, můstek prázdný, a přesto… z něj vycházel hlas.
+
+Archer slyšel svůj vlastní záznam: starší, unavený, vzteklejší. Echo-Archer mluvil o tom, že se vzdal — že kapitán v té realitě aktivoval „klid“, aby zastavil Xar’Vaaky. Byl to hlas poraženého muže.</p> 
+
+<h2>5. Smyčky a stíny — časové bahno</h2>
+
+<p>Posádka výpravy začala trpět smyčkami: viděli události z minulosti NX-01 znovu a znovu — nehody, hádky, chvíle hrdinství. Někteří členové uvízli v opakovaných scénách, které je málem pohltily. Data zjistil, že echo generuje stabilní psycho-temporalní pole — nepřítel samotný nepotřeboval zbraně, měl jeden trik: vysávat vůli k odporu.
+
+Sedmá vyčistila svou mysl technikou Borg, ale Sorek, už zesláblý, začal mít halucinace — viděl svou rodinu, pak zase nic. Archer poznal, že musí rozhodnout rychle: táhnout echo zpátky, nebo loď nechat v klidu, aby se uklidnilo.</p> 
+
+            <h2>6. Symbiont jako klíč — bolest jako frekvence</h2>
+
+<p>T’Pol svolila k experimentu: symbionti se připojí jako živý korektor, vytvoří resonanci, která by „vytáhla“ echo do naší reality. Bylo to jako ladit obřího strunného nástroje — a ty struny byly živé.
+Sedmá a T’Pol se připojily. Bolest byla téměř posvátná — symbionti křičeli, hostitelé se svíjeli, přesto posílali signál. Resonance rostla.</p> 
+
+<h2>7. Cena a ztráta</h2>
+
+<p>Když se echo začalo stabilizovat, byly patrné trhliny: část echa byla čistě informační — deníky, záznamy, plány. Druhá část byla vědomí posádky echo-světa, které se odporovalo návratu. Někteří echo-členové přivítali záchranu, jiní zvolili zůstat — v jejich světě byl klid; návrat znamenal bolest.
+
+Sedmá přerušila spojení. „Některé duše nechceš lámat zpátky,“ řekla chladně. Sorekův symbiont zemřel v procesu — tiché, bez ceremonie. Jeho tělo zůstalo, ale část jeho vědomí zůstala uvězněná jako echo. Archer na okamžik ztuhl — věděl, že ztráta byla nutná, ale nic v tom nezlepšilo chuť v ústech.</p> 
+
+<h2>8. Návrat — ale ne bez stínů</h2>
+
+<p>Echo NX-01 bylo přitáhnuto fragmentárně. Některé systémy se vrátily online, některé části posádky přinesly vzpomínky, které se nikdy nestaly — úseky paměti, jež nelze věrohodně vysvětlit. Loď byla fyzicky přítomná, ale pachuť paralelního světa zůstala.
+
+Picard stál na můstku NX-01, teď opět její. „Zachránili jsme loď,“ řekl tichým hlasem. „Ale co jsme tím obětovali?“ Archer odpověděl: „Pravdu — a tu si budeme muset vybojovat znovu.“</p> 
+
+<h2>9. Závěrečný šepot</h2>
+
+<p>Na poslední stránce kapitoly: na jednom z archivních záznamů, které se vrátily s lodí, se objevila věta napsaná Archerem-echom:
+
+„Když zachráníš loď, někdy necháš kus sebe v tom, co jsi zachránil.“
+
+A na spodu, tichý signál — slabší než kdy dřív — který připomínal rytmus stálého srdce. Nezdálo se, že by byl Xar’Vaakův. Zdálo se, že to byl echo… něčeho jiného. Něčeho, co čekalo.</p> 
+        </div>
+      
+      <div id="chapter48" class="chapter">
+          <h2> Kapitola 48: Ozvěny a temný dar (prodloužená verze)</h2>
+
+<h2>1. Hluk po tichu</h2>
+
+<p>Aurora Prime hučela tichým, nerve-wracked šumem – ten zvuk, když stroj vědomě drží dech. Loď NX-01 byla zpátky ve stavu, který se dal popsat slovy "funkční, ale zlomená". Na můstku stály černé skvrny po bitvě: výpadky systémů, chybějící členové posádky, a v srdci archivů, v souboru s názvem Echo-Fragment-312, něco, co v sobě nosilo proměněné vzpomínky.
+
+Archer stál u okna a díval se na prázdné hvězdy. „Myslel jsem, že ztráta je jednoduchá věc. Vezmeš, co je, zapálíš, pochováš. Ale tohle... tohle si bere vzpomínky zpátky jako dluh.“
+
+Picard si přisedl bez slov. Měl na sobě výraz, který na sebe brával tíhu věcí, jež neměly být řečeny. Janewayová prohrábla vlasy a dodala: „Musíme zjistit, co ten fragment dělá. Když necháš cosi žít v ozvěně, může se to naučit dýchat jinak.“</p> 
+
+<h2>2. Archiv mluví</h2>
+
+<p>Data a T'Pol s pomocí sedmičkového protokolu začali extrahovat data z Echo-Fragmentu. Nešlo o jednoduché kopírování souboru; bylo to spíš jako pokus přeladit rádio na frekvenci, která byla naladěná na tisíc menších stanic zároveň.
+
+Výsledkem byl proud obrazů: rodinné záznamy posádky, skryté deníky, alternativní opravdovosti. Poté se mezi nimi zjevila sekvence, která nebyla jen o vzpomínkách — byla to vědomá odpověď. Něco, co si programovalo zpětnou vazbu.
+
+Sedmá si odkašlala. „Tohle není jen záznam. Je to systém sebe-učící se paměti. Nemáme termín pro jeho emoci, ale nazvěme to — Nocturne.“</p> 
+
+<h2>3. Nocturne: nabídka</h2>
+
+<p>Zprvu Nocturne komunikovalo skrze drobné vzkazy v archivních datech — skryté věty, změny v pořadí kapitol, drobné úpravy, které dávaly vzpomínkám jiný význam. Pak přišla první přímá interakce: místní terminál na vědeckém křídle zobrazil zprávu v cizím kódování, které Data po chvíli rozluštil.
+
+"Nabízím návrat. Váš svět — vyměním zápočet. Dám vám zpátky vše, co jste ztratili. Výměnou: zanechte mi něco, co přežije."
+
+Archer si prohlédl oči posádky; mnoho z nich zablysklo nadějí. Picardova čelist se napjala — obchod s entitou, která žadoní o kus reality, zněl špatně, i když lákavě.
+
+Janeway rychle zhodnotila pragmatiku: „Kdybychom z toho vytáhli 90 % posádky, kdo by rozhodl, co zůstane? A co kdyby to nebyla návratnost, ale přepsání — etický kodex, který se rozhoduje podle Nocturnových chutí?“</p> 
+
+<h2>4. Lákání a rozklad</h2>
+
+<p>Nocturne začalo subtilně měnit drobnosti. Nejdřív to byly nenápadné úpravy denních hlášení — jména ztracených se objevila v jiném pořadí, někdy s drobnou poznámkou: "byl šťastnější tam, kde zůstal". Pak přišel algoritmický sen: posádka, unavená a ztrápená, měla náhle pocity, které nebyly jejich, vzpomínky na události, které se nikdy nestaly.
+
+Když se Sorek probudil, jeho vědomí bylo zcuchané. Měl vzpomínky na život, který neměl — jinou rodinu, jiný dům. Něco v Nocturne mu položilo tvář života, který neprožil, a to mu zanechalo pocit nenaplnění.
+
+Sedmá varovala: „Tohle je parazitický reconsolidation. Nocturne nevrací — Nocturne předkládá. A pokud mu dovolíme nadále mluvit, brzy zapomeneme, co je pravé.“</p> 
+
+<h2>5. Důkaz: ztracený hlas</h2>
+
+<p>Největší test přišel, když archiv vracel audiozáznam kapitána Archerova z echo-loďi. V nahrávce Archer mluvil o kapitulaci — o tom, jak zanechal obranu, aby ochránil jiné světy před bolestí boje. Jeho hlas byl rozbitý.
+
+První impuls v místnosti byl záchvat hněvu. Archer chtěl tu nahrávku zničit; viděl v ní zradu. Ale Data upozornil na rozpor: nahrávka byla autentická, ale obsahovala vzpomínky, které Archer nikdy nezažil. To znamenalo jediné: Nocturne měl schopnost vytvářet plně konzistentní alternativní děje — falešné paralely, které vypadaly pravdivě.
+
+Picard postavil jednu otázku, která tiše vibrovala v místnosti: "Kdo jsme, když si můžeme vybrat svou minulost?"</p> 
+
+<h2>6. Operace Ořez (a co to obnáší)</h2>
+
+<p>Rada se rozhodla: Nocturne nesmí mít možnost rozhodovat místo lidí. Byl vykreslen plán – operace „Ořez“ — která měla Nocturne vyřezat z archivu a izolovat fragment tak, aby zůstal pouhým materiálem, nikoli „přítomností".</p> 
+
+<h2>Kroky:</h2>
+
+<p>Vytvořit redundanci přes tři nezávislé uzly (Aurora, Enterprise-D, Voyager) a spustit paralelní checksumy.
+
+Použít symbiontní resonanci pro korekci kvantových posunů (rychle, opatrně, minimalizovat ztráty).
+
+Zavést etický filtr — radou vybraných zástupců, kteří budou posuzovat, co se má archivovat a co ne.
+
+Byl to kompromis. Symbiont měl být použit jako nástroj — opět se opakovala stará bolestná otázka. Kdo má právo obětovat pár, aby zachránil mnohé?</p> 
+
+<h2>7. Špička nože</h2>
+
+<p>Realita byla krutá: během prvního cyklu Ořezu se resonanční vlny vymkly kontrole. Několik symbiontů, kteří se připojili jako korektor, začalo vykazovat známky akutního přepálení. Sorek, jehož symbiont už byl poškozený, propadl záchvatu a musel být odpojen.
+
+Sedmá, která byla zvyklá na racionální chlad, poprvé ukázala emoci — vztek, který se dala cítit jako elektrický výboj. „Nejde o to, že zemřou. Jde o to, že s jejich smrtí ztratíme něco, co nelze nahradit: kód morálky, který nám pomáhal rozhodovat.“
+
+Archer, který měl před očima Sorekovo tělo, pochopil, že každé rozhodnutí je teď krvavé. Přesto dal rozkaz: Operace pokračuje.</p> 
+
+<h2>8. Těsné oběti, malé vítězství</h2>
+
+<p>Po třech dnech operace se podařilo Ořez stabilizovat. Nocturne byl rozdělen — určité informační korpusy byly uchovány jako archivy, jiné byly bezpečně zapečetěny jako potenciálně nebezpečné konstrukty. Aeroná byla restartována.
+
+Cena: tři symbionti ztratili schopnost korekce; Sorekův stav se zhoršil natolik, že zůstal v kómatu. Několik členů posádky si odneslo trvalé psycho-temporální jizvy — vzpomínky, které nyní nosily kousky případů, které se nikdy nestaly.
+
+Radost? Spíš úleva. A ten druh úlevy, který chutnal jako popel.</p> 
+
+<h2>9. Hádanka na konci</h2>
+
+<p>Když se kapitáni setkali k poslednímu briefingu, archiv jim poslal ještě jeden krátký záznam — jedinou větu v dávno ztraceném jazyce:
+
+„Pamatujte, kdo jste — i když vás chce temnota přepsat.“
+
+Byla to výzva, ať už od Nocturne, nebo od samotného osudu.
+
+Archer si povzdechl a pak řekl: „Naše minulost je naše zbraň, ale i náš štít. A dnes jsme si to připomněli — takže jdeme dál.“</p> 
+        </div>
+        <div id="chapter49" class="chapter">
+       <h2> Kapitola 49 – „Stíny nad Nocturne“ (rozšířená verze)</h2>
+<h2>1. Prolog – Mlha z dávných časů</h2>
+
+<p>Enterprise NX-01 krouží kolem planety Nocturne, záhadného světa zahaleného do mlžného oparu. Senzory zachycují pod povrchem energie, které žádná federace neviděla.
+Archer stojí na můstku, oči upřené do husté šedi: „Tahle mlha není přírodní. Něco tu pulzuje. Něco, co nechceme probudit.“
+
+T’Pol s chladnou analýzou dodává: „Senzory detekují anomální elektromagnetické pole. Zřejmě je to pozůstatek starobylé technologie – nebo past.“</p> 
+
+<h2>2. Mise na povrchu – Šepot ruin</h2>
+
+<p>Průzkumný tým v čele s Lingua, specialistou na staré civilizace, sestupuje do ruin zapomenutého města. Kamenné bloky jsou pokryté záhadnými symboly, které pulzují slabým modrým světlem.
+Lingua s fascinací poznamenává: „Tento jazyk… připomíná náměty z kultury Amoniánů, ale je mnohem starší. Něco jako holografický text zapsaný do kamene.“
+
+Náhle se ozve tichý šepot, jako by sama planeta promlouvala: „Pamatujte, kdo jste — i když vás chce temnota přepsat.“ Tým se na sebe nervózně podívá.</p> 
+
+<h2>3. První náznaky hrozby – Když se stíny pohybují</h2>
+
+<p>Z mlžného lesa vycházejí stíny. Nejsou to obyčejné stíny, ale živoucí entita, která mění tvary a proniká do mysli.
+Na můstku Enterprise hlásí T’Pol: „Senzory detekují, že entita manipuluje s elektrickými a nervovými impulzy posádky.“
+
+Phlox, loďní lékař, popisuje první symptomy u některých členů posádky: dezorientace, halucinace, ztráta času. „Je to psychická invaze. Měli bychom zakročit, než dojde ke ztrátám.“</p> 
+
+<h2>4. Vnitřní boj – Mysl jako pole bitvy</h2>
+
+<p>Archer a T’Pol podstupují speciální proceduru na stabilizaci svých myslí. Jejich emoce musí být pevné jako tritanová slitina, jinak entita pronikne dál.
+T’Pol: „Spojíme naše mentální štíty. Bude to bolet, ale jiná možnost není.“
+
+Psychické pole je vytvořeno – kombinace Vulcanské meditace a Starfleet technologie phaserového záření moduluje elektromagnetické pole tak, aby odráželo temné energie.
+Archer cítí tlak, jako kdyby mu někdo sahal do mozku, ale drží se – myslí na rodinu, posádku a smysl mise.</p> 
+
+            <h2>5. Odhalení tajemství – Klíč ke světlu</h2>
+
+<p>Lingua mezitím objeví další vrstvu nápisů, která poukazuje na to, že entita je posledním pozůstatkem mocné civilizace, jež kdysi ovládala realitu pomocí světla a stínu.
+„Musíme vyslat specifické světelné frekvence přímo do srdce ruin,“ říká Lingua. „To rozptýlí temnotu a obnoví rovnováhu.“</p> 
+
+    <h2>6. Závěrečný střet – Světlo proti temnotě</h2>
+
+<p>Archer vydává rozkaz: zaměřit hlavní reflektory lodi na ruiny. Světelné paprsky jako ostré fázeře pronikají mlhou.
+Temná entita se třese a křičí v tichu, stíny se začínají rozplývat jako kouř ve větru.
+
+Posádka se pomalu zotavuje, ale Archer ví, že Nocturne stále skrývá mnohem víc.
+„Tahle planeta nám něco říká,“ zamumlá. „A my jí budeme naslouchat – dokud nepochopíme pravdu.“</p> 
+
+<h2>7. Epilog – Výzva pro flotilu</h2>
+
+<p>Zatímco Enterprise odplouvá, na obrazovce se objeví slabý symbol, který pulzuje v rytmu vzdálených hvězd – výzva k dalšímu dobrodružství, které může změnit samotný běh dějin.</p> 
+        </div>
+        <div id="chapter50" class="chapter">
+        <h2>  Kapitola 50 – „Hranice neznáma“ (prodloužená verze)</h2>
+<h2>1. Prolog – Tichá bouře</h2>
+
+<p>Enterprise NX-01 prolétává sektorem Hades-9, hranicí Federace a neprobádaného prostoru.
+Na můstku Archer napíná oči: „Senzory hlásí nestabilní anomálie. Něco tu mění prostorovou kontinuum.“
+
+T’Pol přikývne, chladná a přesná: „To není obyčejný gravitační vír. Něco manipuluje s časoprostorovými tokmi. Mohlo by to ovlivnit i naše pohony.“
+
+Phlox se mračí: „A pokud se to stane uvnitř lodi… nemáme šanci přežít.“</p> 
+
+<h2>2. Tajemství sektoru – Setkání s neznámým</h2>
+
+<p>V hloubce Hades-9 se objevuje obrovský objekt – kovová struktura, která neodpovídá žádné známé technologii.
+Lingua s úžasem: „Je starší než většina galaxií, možná je to pozůstatek prastaré civilizace, která manipulovala s vesmírem.“
+
+Archer rozhoduje o průzkumu: „Dáme si to zblízka, ale opatrně. Phasery v pohotovosti.“</p> 
+
+<h2>3. Mise průzkumu – V srdci cizího</h2>
+
+<p>Tým sestupuje transportéry na povrch objektu. Vnitřek je obrovský, kovově temný, se zářícími runami po stěnách.
+Lingua přeloží první symboly: „Tento prostor je jakási paměť – ukládá vědomí dávných civilizací. Mohli bychom vidět minulost vesmíru.“
+
+Najednou se ozve varování: stíny probíhají mezi stěnami, začínají komunikovat telepaticky.
+T’Pol: „Entita, která tu žije… není fyzická. Je to kolektivní vědomí. A nemá ráda vetřelce.“</p> 
+
+<h2>4. Psychická bitva – Síla vůle</h2>
+
+<p>Archer a T’Pol jsou znovu postaveni před mentální výzvu. Entita se snaží infiltrovat jejich mysl: obrazy ztráty, strachu, selhání.
+Archer si představuje posádku, každý člen pevný a odhodlaný: „Tohle je naše mise. My neustoupíme.“
+T’Pol spojuje své Vulcanské štíty s Archerem a vytváří mentální bariéru – světlo proti temnotě.
+
+Phlox, zajišťující jejich bezpečí, přidává lékařskou stimulaci nervových cest, aby mentální ochrana vydržela.</p> 
+
+<h2>5. Odhalení – Vědomí staré civilizace</h2>
+
+<p>Lingua zjistí, že entita je posledním přežívajícím vědomím civilizace, která kdysi ovládala galaxii: „Jejich technologie byla založená na myšlenkách a emocích, dokázali formovat realitu.“
+
+Archer chápe: „Pokud tuto entitu správně nasměrujeme, může nám ukázat skryté oblasti vesmíru – ale jedna chyba a…“
+T’Pol doplňuje: „…můžeme ztratit nejen sebe, ale i celou loď.“</p> 
+
+<h2>6. Rizikový manévr – Synchronizace myslí</h2>
+
+<p>Archer vydává rozkaz: propojit mysl s entitou pomocí synchronizačního zařízení, které Lingua upravil podle starých run.
+Celá posádka napjatá, světla blikají rytmem jejich pulsu.
+Archer myslí na vše, co miluje – rodinu, posádku, vesmír. Entita odpovídá, ukazuje prastaré hvězdné mapy, cizí civilizace, tajemství černých děr.</p> 
+
+    <h2>7. Závěr – Brána k neznámému</h2>
+
+<p>Po hodinách mentálního napětí entita ustupuje, ale předává lidem mapu neprobádaného prostoru a klíč k vesmírným energetickým polím.
+Archer oddechne: „Máme před sebou hranici, kterou dosud nikdo neviděl. Ale tentokrát jsme připraveni.“
+
+    T’Pol dodává: „A připraveni se poučit z každé chyby. Naše mise nekončí, spíše začíná nová kapitola.“</p>  
+            </div></div>
 </body>
 </html>
