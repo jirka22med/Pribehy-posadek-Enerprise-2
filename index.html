@@ -11,1022 +11,561 @@
     
     <style>
 /* ========================================
-   STAR TREK KRONIKY - VYLEPŠENÉ CSS
+   STAR TREK KRONIKY - NOVÝ DARK STYL
    Více admirál Jiřík & Admirál Claude.AI
+   2026 - Od nuly podle HTML struktury
    ======================================== */
 
-/* === ZÁKLADNÍ STYLY === */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* === FONTY === */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&display=swap');
 
+/* === CSS PROMĚNNÉ === */
 :root {
-    /* Star Trek barevná paleta */
-    --primary-bg: #f5f3f1;
-    --primary-text: #4a4a4a;
-    --accent-color: #d1ccc6;
-    --secondary-accent: #a39b90;
-    --dark-text: #1a1a1a;
-    --audio-thumb: #877d72;
-    --highlight-red: #ff4444;
-    --text-dark: #000000;
-    
-    /* Responzivní rozměry */
-    --container-max-width: 1200px;
-    --timeline-dot-size: 18px;
-    --timeline-line-width: 3px;
+    --bg-main:        #07090f;
+    --bg-card:        #0d1117;
+    --bg-card-hover:  #111827;
+    --bg-nav:         #0a0d14;
+    --border-color:   #1e2a3a;
+    --border-glow:    #1a4a7a;
+
+    --gold:           #ffd700;
+    --gold-dim:       #b8960a;
+    --red:            #cc2200;
+    --red-bright:     #ff3300;
+    --blue:           #00aaff;
+    --blue-dim:       #005580;
+    --green:          #00cc66;
+    --cyan:           #00e5ff;
+
+    --text-primary:   #e8eaf0;
+    --text-secondary: #8a9bb0;
+    --text-muted:     #4a5568;
+
+    --font-title:     'Orbitron', sans-serif;
+    --font-body:      'Exo 2', sans-serif;
+
+    --timeline-line:  2px;
+    --timeline-dot:   16px;
+    --radius:         10px;
+    --transition:     0.3s ease;
 }
 
+/* === RESET === */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* === BODY === */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--primary-bg);
-    color: var(--primary-text);
-    text-align: center;
-    line-height: 1.6;
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 40, 80, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(80, 0, 0, 0.1) 0%, transparent 60%);
+    color: var(--text-primary);
+    line-height: 1.7;
     font-size: 16px;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* === HLAVNÍ NAVIGACE === */
-.main-nav-btn {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--blue-dim), var(--border-glow));
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+/* === HLAVNÍ KONTEJNER === */
+#app { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* === HEADER === */
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+header h1:first-child {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background: transparent;
-    color: var(--primary-text);
+    color: var(--gold) !important;
+    -webkit-text-fill-color: var(--gold) !important;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    margin-bottom: 0.5rem;
+    background: none !important;
+}
+header h1:last-child {
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 300;
+    color: var(--text-secondary) !important;
+    letter-spacing: 2px;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
 }
 
-.main-nav-btn:hover {
-    background-color: var(--accent-color);
-    color: var(--dark-text);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* === NAVIGACE === */
+nav {
+    display: flex;
+    justify-content: center;
+    background: #0d1a2e;
+    border: 1px solid var(--border-glow);
+    border-radius: 50px;
+    padding: 6px;
+    max-width: 100%;
+    margin: 0 auto 2.5rem;
+    box-shadow: 0 0 25px rgba(0, 20, 60, 0.6), inset 0 1px 0 rgba(255,255,255,0.05);
 }
-
-.main-nav-btn.active {
-    background-color: var(--accent-color);
-    color: var(--dark-text);
+.main-nav-btn {
+    font-family: var(--font-title);
+    font-size: 0.68rem;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background: transparent;
+    color: #a08a3a !important;
+    transition: all var(--transition);
+    flex: 1;
+    white-space: nowrap;
 }
+.main-nav-btn:hover {
+    color: var(--gold) !important;
+    background: rgba(255, 215, 0, 0.05);
+}
+.main-nav-btn.active {
+    background: linear-gradient(135deg, var(--border-glow), #0d2a4a);
+    color: var(--gold) !important;
+    box-shadow: 0 0 15px rgba(0,170,255,0.2);
+    border: 1px solid var(--border-glow);
+}
+
+/* === KARTIČKY PŘÍBĚHOVÝCH OBLOUKŮ === */
+.arc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.arc-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--blue), var(--cyan));
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+.arc-card:hover {
+    border-color: var(--border-glow);
+    background: var(--bg-card-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,40,80,0.4);
+}
+.arc-card:hover::before { opacity: 1; }
+.arc-card h3 {
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gold) !important;
+    -webkit-text-fill-color: var(--gold) !important;
+    background: none !important;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+}
+.arc-card a, .arc-card p {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: var(--blue) !important;
+    background: transparent !important;
+    line-height: 1.8;
+    display: block;
+    text-align: left;
+    margin-bottom: 0.2rem;
+    text-decoration: none;
+    transition: color var(--transition);
+}
+.arc-card a:hover { color: var(--cyan) !important; }
 
 /* === ČASOVÁ OSA === */
 .timeline {
     position: relative;
-    max-width: var(--container-max-width);
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 2rem 1rem;
 }
-
 .timeline::before {
     content: '';
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 0;
-    bottom: 0;
-    width: var(--timeline-line-width);
-    background: linear-gradient(to bottom, var(--accent-color), var(--secondary-accent));
-    border-radius: 2px;
+    top: 0; bottom: 0;
+    width: var(--timeline-line);
+    background: linear-gradient(to bottom, transparent, var(--border-glow) 10%, var(--blue-dim) 90%, transparent);
 }
-
 .timeline-item {
     position: relative;
     width: 100%;
-    padding: 20px 0;
-    margin-bottom: 30px;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.5s ease-out both;
 }
-
-.timeline-item:nth-child(even) {
-    padding-left: calc(50% + 40px);
-    padding-right: 30px;
-    text-align: left;
-}
-
-.timeline-item:nth-child(odd) {
-    padding-left: 30px;
-    padding-right: calc(50% + 40px);
-    text-align: right;
-}
-
+.timeline-item:nth-child(even) { padding-left: calc(50% + 40px); padding-right: 1.5rem; text-align: left; }
+.timeline-item:nth-child(odd)  { padding-left: 1.5rem; padding-right: calc(50% + 40px); text-align: right; }
 .timeline-dot {
     position: absolute;
     left: 50%;
-    top: 30px;
+    top: 2rem;
     transform: translateX(-50%);
-    width: var(--timeline-dot-size);
-    height: var(--timeline-dot-size);
-    background-color: var(--primary-bg);
-    border: 3px solid var(--secondary-accent);
+    width: var(--timeline-dot);
+    height: var(--timeline-dot);
+    background: var(--bg-main);
+    border: 2px solid var(--blue-dim);
     border-radius: 50%;
     z-index: 10;
-    transition: all 0.3s ease;
+    transition: all var(--transition);
 }
-
 .timeline-item:hover .timeline-dot {
-    transform: translateX(-50%) scale(1.2);
-    border-color: var(--highlight-red);
-    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+    transform: translateX(-50%) scale(1.3);
+    border-color: var(--gold);
+    box-shadow: 0 0 15px rgba(255,215,0,0.5);
+    background: var(--gold-dim);
 }
-
 .timeline-content {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    transition: all var(--transition);
 }
-
 .timeline-content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border-color: var(--border-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0,40,80,0.35);
+}
+.timeline-content h3 {
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    color: var(--gold) !important;
+    -webkit-text-fill-color: var(--gold) !important;
+    background: none !important;
+    margin: 0.3rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.timeline-content p {
+    font-size: 0.88rem;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    text-align: inherit;
+    font-family: var(--font-body);
+    margin-bottom: 0.5rem;
+}
+.timeline-content a { color: var(--blue); font-size: 0.85rem; text-decoration: none; transition: color var(--transition); }
+.timeline-content a:hover { color: var(--cyan); }
+
+/* === FRAKCE KARTIČKY === */
+.faction-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.faction-card:hover {
+    border-color: var(--border-glow);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 35px rgba(0,40,80,0.4);
+}
+.faction-card .text-4xl { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+.faction-card h3 {
+    font-family: var(--font-title);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gold) !important;
+    -webkit-text-fill-color: var(--gold) !important;
+    background: none !important;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+.faction-card p {
+    font-size: 0.85rem;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    font-family: var(--font-body);
+    text-align: center;
+    margin: 0;
 }
 
-/* === VYLEPŠENÝ ČTEČKA PANEL - PLNÁ ŠÍŘKA === */
-#reader-panel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    height: 100vh;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 243, 241, 0.95));
-    backdrop-filter: blur(90px);
-    border-left: none;
-    box-shadow: 0 0 90px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
-    transform: translateX(100%);
-    opacity: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-#reader-panel.active {
-    transform: translateX(0);
-    opacity: 1;
-}
-
+/* === READER OVERLAY === */
 #reader-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(2px);
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(3px);
     z-index: 999;
-    transition: all 0.5s ease;
     opacity: 0;
     visibility: hidden;
+    transition: all 0.4s ease;
 }
+#reader-overlay.active { opacity: 1; visibility: visible; }
 
-#reader-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* === HEADER PANELU === */
-.reader-header {
-    background: linear-gradient(90deg, var(--highlight-red), #ff6b6b);
-    color: white;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    flex-shrink: 0;
-}
-
-.reader-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.reader-subtitle {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin: 5px 0 0;
-    font-weight: 400;
-}
-
-/* === ZAVÍRACÍ TLAČÍTKO === */
-.reader-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    color: white;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.reader-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: rotate(90deg) scale(1.1);
-}
-
-/* === OBSAH PANELU === */
-.reader-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-color) transparent;
-}
-
-.reader-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.reader-content::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.05);
-}
-
-.reader-content::-webkit-scrollbar-thumb {
-    background: var(--accent-color);
-    border-radius: 4px;
-    transition: background 0.3s ease;
-}
-
-.reader-content::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-accent);
-}
-
-/* === TEXT SEKCE - OPTIMALIZOVÁNO PRO PLNOU ŠÍŘKU === */
-.reader-text {
-    padding: 40px;
-    line-height: 1.9;
-    font-size: 1.2rem;
-    color: var(--text-dark);
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.reader-text h3 {
-    color: var(--highlight-red);
-    font-size: 1.6rem;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--accent-color);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-.reader-text p {
-    margin-bottom: 25px;
-    text-align: justify;
-    text-indent: 25px;
-    font-size: 1.15rem;
-    line-height: 1.9;
-    color: #444; /* jemnější než černá */
-}
-
-.reader-text p:first-of-type {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #222;
-    border-left: 4px solid var(--highlight-red);
-}
-
-
-
-/* === PROGRESS INDIKÁTOR === */
-.reading-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--highlight-red), #ff6b6b);
-    transition: width 0.3s ease;
-    border-radius: 0 3px 0 0;
-}
-
-/* === VYLEPŠENÝ AUDIO PŘEHRÁVAČ === */
-.audio-controls {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border: none;
-    border-top: 1px solid var(--accent-color);
-    padding: 25px;
-    margin: 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-    flex-shrink: 0;
-}
-
-.audio-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.audio-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--primary-text);
-    margin: 0;
-}
-
-.audio-chapter-info {
-    font-size: 0.8rem;
-    color: var(--secondary-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.audio-player {
+/* === READER PANEL === */
+#reader-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 100%; max-width: 100%;
+    height: 100vh;
+    background: #0a0d14;
+    border-left: 1px solid var(--border-glow);
+    box-shadow: -10px 0 60px rgba(0,40,80,0.5);
+    z-index: 1000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.25,0.8,0.25,1), opacity 0.45s ease;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    overflow: hidden;
 }
+#reader-panel.active { transform: translateX(0); opacity: 1; }
 
-.audio-main-controls {
+/* === READER HEADER === */
+#reader-panel > div:first-child {
+    background: linear-gradient(90deg, #0d1a2e, #0a0d14);
+    border-bottom: 1px solid var(--border-glow);
+    padding: 1.25rem 1.5rem;
+    flex-shrink: 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
+}
+#reader-title {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(255,215,0,0.3);
+    padding: 0;
 }
 
-.audio-play-btn {
-    width: 50px;
-    height: 50px;
+/* === CLOSE BUTTON === */
+#reader-close-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 36px; height: 36px;
     border-radius: 50%;
-    border: none;
-    background: linear-gradient(45deg, var(--highlight-red), #ff6b6b);
-    color: white;
-    font-size: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+#reader-close-btn:hover {
+    background: rgba(204,34,0,0.2);
+    border-color: var(--red);
+    color: var(--red-bright);
+    transform: rotate(90deg);
 }
 
-.audio-play-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 68, 68, 0.4);
-}
-
-.audio-time-display {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    color: var(--secondary-accent);
-    font-weight: 500;
-}
-
-.audio-progress-container {
-    position: relative;
+/* === READER CONTENT === */
+#reader-content {
     flex: 1;
+    overflow-y: auto;
+    padding: 2.5rem 3rem;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-glow) transparent;
+}
+#reader-content h2 {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 1.5rem 0 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+    text-align: left;
+}
+#reader-content h2:first-child {
+    padding-top: 0;
+    font-size: 1.15rem;
+    border-bottom: 2px solid var(--border-glow);
+    margin-bottom: 1.5rem;
+}
+#reader-content p {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    color: var(--text-primary) !important;
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+    text-align: justify;
+    text-indent: 1.5rem;
+    background: transparent !important;
+    font-weight: 300;
+}
+#reader-content p:first-of-type {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #c8d8e8 !important;
+    border-left: 3px solid var(--blue);
+    padding-left: 1rem;
+    text-indent: 0;
 }
 
-.audio-progress-bar {
+/* === AUDIO PLAYER === */
+#audio-player {
+    background: linear-gradient(135deg, #0a0f1a, #0d1520);
+    border-top: 1px solid var(--border-glow);
+    padding: 1.25rem 1.5rem;
+    flex-shrink: 0;
+}
+#audio-play-pause {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--blue-dim), var(--border-glow));
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(0,100,200,0.3);
+}
+#audio-play-pause:hover {
+    background: linear-gradient(135deg, var(--blue), #0066cc);
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(0,170,255,0.5);
+}
+#audio-stop {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #660000, #aa1100);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(200,0,0,0.25);
+}
+#audio-stop:hover {
+    background: linear-gradient(135deg, var(--red), var(--red-bright));
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255,50,0,0.5);
+}
+#audio-current-time, #audio-duration {
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+#audio-progress.audio-progress-bar {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 10px;
-    background: linear-gradient(90deg, var(--accent-color), #e9ecef);
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
     outline: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: height var(--transition);
 }
-
-.audio-progress-bar:hover {
-    transform: scaleY(1.1);
-}
-
-.audio-progress-bar::-webkit-slider-thumb {
+#audio-progress.audio-progress-bar:hover { height: 9px; }
+#audio-progress.audio-progress-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    background: linear-gradient(45deg, var(--highlight-red), #ff6b6b);
-    cursor: pointer;
+    width: 16px; height: 16px;
+    background: var(--gold);
     border-radius: 50%;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
-}
-
-.audio-progress-bar::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.5);
-}
-
-.audio-progress-bar::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    background: linear-gradient(45deg, var(--highlight-red), #ff6b6b);
     cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,215,0,0.5);
+    transition: all var(--transition);
+}
+#audio-progress.audio-progress-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 15px rgba(255,215,0,0.8);
+}
+#audio-progress.audio-progress-bar::-moz-range-thumb {
+    width: 16px; height: 16px;
+    background: var(--gold);
     border-radius: 50%;
     border: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
-}
-
-/* === SPEED CONTROL === */
-.audio-speed-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.speed-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--accent-color);
-    background: transparent;
-    border-radius: 15px;
-    font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--primary-text);
 }
 
-.speed-btn.active,
-.speed-btn:hover {
-    background: var(--accent-color);
-    color: var(--dark-text);
-}
-
-/* === TYPOGRAFIE === */
-h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--highlight-red), var(--audio-thumb));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    
-}
-
-h2 {
-    text-align: center;
-    color: var(--highlight-red);
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    padding: 20px 0 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-h3 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--highlight-red), var(--audio-thumb));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-p {
-    text-align: center;
-    color: black;
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
-    line-height: 1.8;
-    margin-bottom: 25px;
-   font-family: Oswald, sans-serif;
-    font-weight: 500;
-    background: white;
-}
-
-/* === TLAČÍTKA === */
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    background: linear-gradient(45deg, var(--accent-color), var(--secondary-accent));
-    color: var(--dark-text);
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    background: linear-gradient(45deg, var(--secondary-accent), var(--accent-color));
-}
-
-/* ========================================
-   MEDIA QUERIES - RESPONZIVNÍ DESIGN
-   ======================================== */
-
-/* === VELKÉ MONITORY (1440px+) === */
-@media screen and (min-width: 1440px) {
-    .timeline {
-        max-width: 1400px;
-        padding: 60px 40px;
-    }
-    
-    .timeline-item {
-        padding: 30px 0;
-        margin-bottom: 40px;
-    }
-    
-    .timeline-item:nth-child(even) {
-        padding-left: calc(50% + 60px);
-        padding-right: 50px;
-    }
-    
-    .timeline-item:nth-child(odd) {
-        padding-left: 50px;
-        padding-right: calc(50% + 60px);
-    }
-    
-    #reader-panel {
-        max-width: 1500px;
-        padding: 40px;
-    }
-}
-
-/* === DESKTOPY (1024px - 1439px) === */
-@media screen and (max-width: 1439px) and (min-width: 1024px) {
-    .timeline {
-        max-width: 1000px;
-        padding: 50px 30px;
-    }
-    
-    .timeline-item:nth-child(even) {
-        padding-left: calc(50% + 50px);
-        padding-right: 40px;
-    }
-    
-    .timeline-item:nth-child(odd) {
-        padding-left: 40px;
-        padding-right: calc(50% + 50px);
-    }
-}
-
-/* === TABLETY (768px - 1023px) === */
-@media screen and (max-width: 1023px) and (min-width: 768px) {
-    .timeline::before {
-        left: 30px;
-        transform: none;
-    }
-    
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        padding-left: 70px;
-        padding-right: 20px;
-        text-align: left;
-    }
-    
-    .timeline-dot {
-        left: 30px;
-        transform: translateX(-50%);
-    }
-    
-    #reader-panel {
-        max-width: 100%;
-        width: 80%;
-    }
-    
-    .audio-controls {
-        padding: 15px;
-    }
-}
-
-/* === MOBILNÍ ZAŘÍZENÍ (480px - 767px) === */
-@media screen and (max-width: 767px) and (min-width: 480px) {
-    :root {
-        --timeline-dot-size: 16px;
-        --timeline-line-width: 2px;
-    }
-    
-    body {
-        font-size: 14px;
-    }
-    
-    .timeline {
-        padding: 30px 15px;
-    }
-    
-    .timeline::before {
-        left: 20px;
-        transform: none;
-    }
-    
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        padding-left: 50px;
-        padding-right: 15px;
-        text-align: left;
-        margin-bottom: 25px;
-    }
-    
-    .timeline-dot {
-        left: 20px;
-        transform: translateX(-50%);
-        width: var(--timeline-dot-size);
-        height: var(--timeline-dot-size);
-    }
-    
-    .timeline-content {
-        padding: 15px;
-        border-radius: 8px;
-    }
-    
-/* === MOBILNÍ VERZE PANELU - PLNÁ ŠÍŘKA === */
-@media screen and (max-width: 767px) and (min-width: 480px) {
-    #reader-panel {
-        max-width: 100%;
-        width: 100%;
-    }
-    
-    .reader-header {
-        padding: 18px;
-    }
-    
-    .reader-title {
-        font-size: 1.3rem;
-    }
-    
-    .reader-text {
-        padding: 25px;
-        font-size: 1.1rem;
-        line-height: 1.8;
-        max-width: 100%;
-    }
-    
-    .reader-text h3 {
-        font-size: 1.3rem;
-    }
-    
-    .reader-text p {
-        font-size: 1.05rem;
-        line-height: 1.8;
-    }
-    
-    .audio-controls {
-        padding: 25px;
-        margin: 0 25px 25px;
-        border-radius: 15px;
-    }
-    
-    .audio-play-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-}
-
-@media screen and (max-width: 479px) {
-    #reader-panel {
-        width: 100%;
-        max-width: none;
-        border-left: none;
-        border-radius: 0;
-    }
-    
-    .reader-header {
-        padding: 15px;
-    }
-    
-    .reader-title {
-        font-size: 1.2rem;
-    }
-    
-    .reader-subtitle {
-        font-size: 0.85rem;
-    }
-    
-    .reader-close {
-        width: 35px;
-        height: 35px;
-        top: 15px;
-        right: 15px;
-        font-size: 18px;
-    }
-    
-    .reader-text {
-        padding: 20px;
-        font-size: 1rem;
-        line-height: 1.7;
-        max-width: 100%;
-    }
-    
-    .reader-text h3 {
-        font-size: 1.2rem;
-        margin-bottom: 18px;
-    }
-    
-    .reader-text p {
-        margin-bottom: 18px;
-        text-indent: 20px;
-        font-size: 1rem;
-        line-height: 1.7;
-    }
-    
-    .reader-text p:first-of-type {
-        font-size: 1.1rem;
-        padding: 15px;
-    }
-    
-    .audio-controls {
-        padding: 18px;
-        margin: 0 15px 20px;
-        border-radius: 12px;
-    }
-    
-    .audio-play-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-    }
-    
-    .audio-progress-bar {
-        height: 8px;
-    }
-    
-    .audio-progress-bar::-webkit-slider-thumb {
-        width: 20px;
-        height: 20px;
-    }
-}
-    
-    .main-nav-btn {
-        padding: 10px 16px;
-        font-size: 14px;
-        margin: 5px;
-    }
-    
-    .audio-controls {
-        padding: 12px;
-        margin: 15px 0;
-    }
-    
-    .audio-progress-bar {
-        height: 6px;
-    }
-    
-    .audio-progress-bar::-webkit-slider-thumb {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-/* === MALÉ MOBILNÍ ZAŘÍZENÍ (do 479px) === */
-@media screen and (max-width: 479px) {
-    :root {
-        --timeline-dot-size: 14px;
-        --timeline-line-width: 2px;
-    }
-    
-    body {
-        font-size: 13px;
-    }
-    
-    .timeline {
-        padding: 20px 10px;
-    }
-    
-    .timeline::before {
-        left: 15px;
-    }
-    
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        padding-left: 40px;
-        padding-right: 10px;
-        margin-bottom: 20px;
-    }
-    
-    .timeline-dot {
-        left: 15px;
-        width: var(--timeline-dot-size);
-        height: var(--timeline-dot-size);
-        border-width: 2px;
-    }
-    
-    .timeline-content {
-        padding: 12px;
-        border-radius: 6px;
-    }
-    
-    #reader-panel {
-        width: 100%;
-        padding: 15px 10px;
-        border-radius: 0;
-    }
-    
-    .main-nav-btn {
-        padding: 8px 12px;
-        font-size: 12px;
-        margin: 3px;
-    }
-    
-    .audio-controls {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 8px;
-    }
-    
-    h2 {
-        font-size: 1.3rem;
-        padding: 15px 0 8px;
-    }
-    
-    p {
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-}
-
-/* === EXTRA MALÉ ZAŘÍZENÍ (do 320px) === */
-@media screen and (max-width: 320px) {
-    .timeline {
-        padding: 15px 5px;
-    }
-    
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        padding-left: 35px;
-        padding-right: 5px;
-    }
-    
-    .timeline-content {
-        padding: 10px;
-    }
-    
-    #reader-panel {
-        padding: 10px 8px;
-    }
-    
-    .audio-controls {
-        padding: 8px;
-    }
-}
-
-/* === LANDSCAPE MÓDY PRO TABLETY A MOBILY === */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    .timeline {
-        padding: 20px;
-    }
-    
-    .timeline-item {
-        margin-bottom: 15px;
-    }
-    
-    #reader-panel {
-        padding: 15px;
-    }
-    
-    h2 {
-        padding: 10px 0 5px;
-    }
-}
-
-/* === DARK MODE PODPORA === */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-bg: #2a2a2a;
-        --primary-text: #e0e0e0;
-        --accent-color: #4a4a4a;
-        --secondary-accent: #666666;
-        --dark-text: #ffffff;
-        --text-dark: #e0e0e0;
-    }
-    
-    .timeline-content {
-        background: #ffffff;
-        color: var(--text-dark);
-    }
-    
-    #reader-panel {
-        background: linear-gradient(135deg, rgba(42, 42, 42, 0.95), rgba(74, 74, 74, 0.95));
-    }
-    
-    .audio-controls {
-        background: rgba(0, 0, 0, 0.4);
-    }
-}
-
-/* === PRINT STYLY === */
-@media print {
-    #reader-panel,
-    #reader-overlay,
-    .audio-controls,
-    .main-nav-btn {
-        display: none !important;
-    }
-    
-    .timeline-content {
-        box-shadow: none;
-        border: 1px solid #ccc;
-    }
-    
-    body {
-        background: white;
-        color: black;
-    }
-}
-
-/* === ANIMACE A EFEKTY === */
+/* === ANIMACE === */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.timeline-item {
-    animation: fadeInUp 0.6s ease-out;
+/* === MEDIA QUERIES === */
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+    .timeline::before { left: 25px; transform: none; }
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) { padding-left: 60px; padding-right: 1rem; text-align: left; }
+    .timeline-dot { left: 25px; transform: translateX(-50%); }
 }
-
-.timeline-item:nth-child(odd) {
-    animation-delay: 0.1s;
+@media screen and (max-width: 767px) {
+    #app { padding: 1rem; }
+    nav { max-width: 100%; flex-wrap: wrap; border-radius: 12px; }
+    .main-nav-btn { font-size: 0.6rem; padding: 8px 10px; }
+    .timeline::before { left: 16px; transform: none; }
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) { padding-left: 45px; padding-right: 0.5rem; text-align: left; }
+    .timeline-dot { left: 16px; transform: translateX(-50%); }
+    #reader-content { padding: 1.5rem; }
+    #audio-player { padding: 1rem; }
 }
-
-.timeline-item:nth-child(even) {
-    animation-delay: 0.2s;
+@media screen and (max-width: 479px) {
+    header h1:first-child { font-size: 1.6rem; letter-spacing: 2px; }
+    .main-nav-btn { font-size: 0.55rem; padding: 7px 8px; }
+    #reader-content { padding: 1rem; }
+    #reader-content p { font-size: 0.95rem; text-indent: 1rem; }
 }
-
-/* === ACCESSIBILITY === */
 @media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-    
-    .timeline-item {
-        animation: none;
-    }
-}
-
-/* === HIGH CONTRAST MODE === */
-@media (prefers-contrast: high) {
-    .timeline-dot {
-        border-width: 4px;
-        border-color: #000;
-    }
-    
-    .timeline-content {
-        border: 2px solid #000;
-    }
-    
-    .main-nav-btn {
-        border: 2px solid #000;
-    }
-}
-        
-/* Celý posuvník */
-::-webkit-scrollbar {
-  width: 12px;        /* šířka vertikálního scrollbaru */
-  height: 12px;       /* výška horizontálního scrollbaru */
-}
-
-/* Dráha posuvníku */
-::-webkit-scrollbar-track {
-  background: #111;   /* tmavé pozadí dráhy */
-  border-radius: 6px;
-}
-
-/* Tažená část (thumb) */
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ff0080, #8000ff); /* duhový efekt */
-  border-radius: 6px;
-  border: 3px solid #111; /* trochu mezery kolem thumb */
-}
-
-/* Při hoveru */
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ff80c0, #bf00ff);
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
     </style>
 </head>
@@ -1038,7 +577,7 @@ p {
             <h1 class="text-lg text-gray-600" style="text-align: center; color: deeppink ">Interaktivní průvodce rozsáhlým příběhem o odvaze, objevech a konfliktech.</h1>
         </header>
 
-        <nav class="flex justify-center mb-10 bg-gray-200/80 rounded-full p-1 max-w-md mx-auto shadow-sm">
+        <nav>
             <button id="nav-arcs" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700 active" style="color: green">Příběhové Oblouky</button>
             <button id="nav-timeline" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700" style="color: blue">Časová Osa</button>
             <button id="nav-factions" class="main-nav-btn flex-1 py-2 px-4 rounded-full text-center text-gray-700" style="color: brown">Postavy a Frakce</button>
@@ -1084,185 +623,198 @@ p {
     
     
 
-    <script>
-                const storyData = {
-            chapters: [], // Zde budou kapitoly načtené z DOM
+  <script>
+        const storyData = {
+            chapters: [],
             arcs: [],
             timeline: [],
             factions: []
         };
 
-        // Tato funkce bude parsovat HTML obsah kapitoly, ale ve tvém případě už content
-        // načítáme přímo jako HTML z DOMu, takže tuto funkci nepotřebujeme pro hlavní obsah.
-        // Může zůstat, pokud ji budeš chtít použít pro jiný typ zpracování textu.
-        function parseChapterContent(htmlString) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlString, 'text/html');
-            // Zde bys mohl filtrovat a přidávat třídy k paragrafům, pokud by content neobsahoval již hotové HTML
-            return doc.body.innerHTML; // Vrátíme celý HTML obsah, jak je.
-        }
-
-        // Pomocná funkce pro formátování času (minuty:sekundy)
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        let currentAudio = null; // Globální proměnná pro aktuálně přehrávaný zvuk
+        // === 2026 PROTOCOL - URL konverze ===
+        function fixAudioSrc(src) {
+            if (!src || !src.trim()) return null;
+            try {
+                let url = new URL(src.trim());
+                if (url.searchParams.has("dl")) {
+                    url.searchParams.set("raw", "1");
+                    url.searchParams.delete("dl");
+                }
+                if (!url.searchParams.has("raw")) {
+                    url.searchParams.append("raw", "1");
+                }
+                return url.toString()
+                    .replace("www.dropbox.com", "dl.dropboxusercontent.com")
+                    .replace("http://", "https://");
+            } catch (e) {
+                console.warn("⚠️ Neplatná URL:", src);
+                return null;
+            }
+        }
 
-        const mainContent = document.getElementById('main-content');
-        const readerPanel = document.getElementById('reader-panel');
-        const readerOverlay = document.getElementById('reader-overlay');
-        const readerTitle = document.getElementById('reader-title');
-        const readerContent = document.getElementById('reader-content');
+        let currentAudio           = null;
+        let currentChapterAudioSrc = null; // Zapamatujeme src pro play po stopAudio
+
+        const mainContent    = document.getElementById('main-content');
+        const readerPanel    = document.getElementById('reader-panel');
+        const readerOverlay  = document.getElementById('reader-overlay');
+        const readerTitle    = document.getElementById('reader-title');
+        const readerContent  = document.getElementById('reader-content');
         const readerCloseBtn = document.getElementById('reader-close-btn');
+        const audioPlayer    = document.getElementById('audio-player');
+        const playPauseBtn   = document.getElementById('audio-play-pause');
+        const playIcon       = document.getElementById('play-icon');
+        const pauseIcon      = document.getElementById('pause-icon');
+        const stopBtn        = document.getElementById('audio-stop');
+        const progressBar    = document.getElementById('audio-progress');
+        const currentTimeEl  = document.getElementById('audio-current-time');
+        const durationEl     = document.getElementById('audio-duration');
 
-        const audioPlayer = document.getElementById('audio-player');
-        const playPauseBtn = document.getElementById('audio-play-pause');
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
-        const stopBtn = document.getElementById('audio-stop');
-        const progressBar = document.getElementById('audio-progress');
-        const currentTimeEl = document.getElementById('audio-current-time');
-        const durationEl = document.getElementById('audio-duration');
+        function attachAudioCallbacks(audio) {
+            audio.oncanplaythrough = () => {
+                if (currentAudio !== audio) return;
+                durationEl.textContent = formatTime(audio.duration);
+                progressBar.max        = audio.duration;
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                console.log('🎵 Audio připraveno:', currentChapterAudioSrc);
+            };
+            audio.ontimeupdate = () => {
+                if (currentAudio !== audio) return;
+                progressBar.value         = audio.currentTime;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            };
+            audio.onended = stopAudio;
+            audio.onerror = (e) => {
+                if (currentAudio !== audio) return;
+                console.error('❌ Chyba při načítání zvuku:', e);
+                readerContent.innerHTML += '<p class="text-green-500 mt-4 font-bold">Chyba při načítání zvuku. U některých kapitol nahrávky ještě nejsou dokončeny.</p>';
+            };
+        }
 
         function stopAudio() {
             if (currentAudio) {
+                // Nejdříve odstraníme callbacky aby nepálily po nullování!
+                currentAudio.oncanplaythrough = null;
+                currentAudio.ontimeupdate     = null;
+                currentAudio.onended          = null;
+                currentAudio.onerror          = null;
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
-                currentAudio = null; // Resetujeme currentAudio
+                currentAudio = null;
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
-                progressBar.value = 0;
+                progressBar.value         = 0;
                 currentTimeEl.textContent = '0:00';
-                durationEl.textContent = '0:00';
-                console.log('Audio zastaveno a resetováno.'); // Debugging
+                // ✅ durationEl NECHÁVÁME – délka zůstane zobrazená po zastavení!
+                console.log('✅ Audio zastaveno a resetováno.');
             }
         }
 
         function openReader(chapterId) {
-            console.log('openReader volána pro ID:', chapterId); // Debugging
-            stopAudio(); // Vždy zastavíme předchozí zvuk před otevřením nové kapitoly
+            console.log('openReader volána pro ID:', chapterId);
+            stopAudio();
+            currentChapterAudioSrc = null; // Reset src při otevření nové kapitoly
 
             const chapter = storyData.chapters.find(ch => ch.id === chapterId);
             if (!chapter) {
-                console.error('Kapitola s ID ' + chapterId + ' nebyla nalezena v storyData.'); // Debugging
+                console.error('❌ Kapitola s ID ' + chapterId + ' nebyla nalezena.');
                 readerTitle.textContent = 'Chyba načítání';
-                readerContent.innerHTML = '<p class="text-red-500">Chyba: Kapitola nebyla nalezena. Zkontrolujte konzoli pro více informací.</p>';
+                readerContent.innerHTML = '<p class="text-red-500">Chyba: Kapitola nebyla nalezena.</p>';
                 readerOverlay.classList.remove('hidden');
                 readerPanel.classList.add('active');
                 return;
             }
 
             readerTitle.textContent = `Kapitola ${chapter.id}: ${chapter.title}`;
-            // Zde zobrazíme načítací zprávu hned
-            readerContent.innerHTML = '<p class="text-center text-gray-500">Načítání obsahu...</p>'; 
+            readerContent.innerHTML = '<p class="text-center text-gray-500">Načítání obsahu...</p>';
             readerPanel.classList.add('active');
             readerOverlay.classList.remove('hidden');
 
-            // Malé zpoždění, aby se načítací zpráva stihla zobrazit, než se vloží obsah
             setTimeout(() => {
-                readerContent.innerHTML = chapter.content; // Vložíme plný HTML obsah kapitoly
-                console.log('Obsah kapitoly vložen:', chapter.title); // Debugging
+                readerContent.innerHTML = chapter.content;
+                console.log('📖 Obsah kapitoly vložen:', chapter.title);
 
-                // Nastavení audio přehrávače
-                if (chapter.audioSrc) {
-                    currentAudio = new Audio(chapter.audioSrc); // Používáme audioSrc přímo z dat
-                    currentAudio.load(); // Explicitně načteme audio
+                const fixedSrc = fixAudioSrc(chapter.audioSrc);
 
-                    currentAudio.oncanplaythrough = () => {
-                        durationEl.textContent = formatTime(currentAudio.duration);
-                        progressBar.max = currentAudio.duration;
-                        playIcon.classList.remove('hidden');
-                        pauseIcon.classList.add('hidden'); // Zajištění správné ikony
-                        console.log('Audio připraveno k přehrávání:', chapter.audioSrc); // Debugging
-                    };
-
-                    currentAudio.ontimeupdate = () => {
-                        progressBar.value = currentAudio.currentTime;
-                        currentTimeEl.textContent = formatTime(currentAudio.currentTime);
-                    };
-
-                    currentAudio.onended = stopAudio; // Použijeme existující funkci stopAudio
-
-                    currentAudio.onerror = (e) => {
-    console.error('Chyba při načítání zvuku:', e); // Debugging
-    readerContent.innerHTML += '<p class="text-green-500 mt-4 font-bold">Chyba při načítání zvuku. Zkuste to prosím znovu. Tato chyba vzniká z důvodu, že u některých kapitol zatím nejsou nahrávky dokončeny a stále se na nich pracuje.</p>';
-
-                    };
+                if (fixedSrc) {
+                    audioPlayer.classList.remove('hidden');
+                    currentChapterAudioSrc = fixedSrc; // ← zapamatujeme src
+                    const audio = new Audio(fixedSrc);
+                    currentAudio = audio;
+                    attachAudioCallbacks(audio);
+                    audio.load();
                 } else {
-                    console.warn('Kapitola ' + chapter.id + ' nemá audioSrc.'); // Debugging
+                    console.warn('⚠️ Kapitola ' + chapter.id + ' nemá audioSrc.');
                     readerContent.innerHTML += '<p class="text-gray-500 mt-4">Pro tuto kapitolu není k dispozici audio.</p>';
-                    // Skryjeme ovládací prvky audia, pokud není k dispozici audio
-                    audioPlayer.classList.add('hidden'); 
+                    audioPlayer.classList.add('hidden');
                 }
-            }, 50); // Krátké zpoždění
+            }, 50);
         }
 
         function closeReader() {
             stopAudio();
+            currentChapterAudioSrc = null;
             readerPanel.classList.remove('active');
             readerOverlay.classList.add('hidden');
-            console.log('Čtecí panel zavřen.'); // Debugging
+            console.log('📕 Čtecí panel zavřen.');
         }
 
-        // Tato funkce teď jen inicializuje arcs, timeline a factions
         function initializeSectionsData() {
-            // Příběhové oblouky
             const arcsMap = new Map();
             storyData.chapters.forEach(chapter => {
                 if (!arcsMap.has(chapter.arc)) {
                     arcsMap.set(chapter.arc, {
-                        id: `arc-${arcsMap.size + 1}`, // Generujeme ID dynamicky
+                        id: `arc-${arcsMap.size + 1}`,
                         name: chapter.arc,
-                        description: `Prozkoumejte kapitoly z oblouku "${chapter.arc}".`,
                         chapters: []
                     });
                 }
                 arcsMap.get(chapter.arc).chapters.push(chapter);
             });
             storyData.arcs = Array.from(arcsMap.values());
-            console.log('Arcs data inicializována:', storyData.arcs); // Debugging
 
-            // Časová osa
             storyData.timeline = storyData.chapters.map(chapter => ({
-                id: chapter.id,
-                year: `Rok ${2151 + chapter.id - 1}`, // Příklad: začínáme rokem 2151 pro kap. 1
-                event: chapter.event,
+                id:        chapter.id,
+                year:      `Rok ${2151 + chapter.id - 1}`,
+                event:     chapter.event,
                 chapterId: chapter.id,
-                title: chapter.title // Přidáme title pro timeline zobrazení
+                title:     chapter.title
             }));
-            console.log('Timeline data inicializována.'); // Debugging
 
-            // Postavy a Frakce (pevně daná data)
             storyData.factions = [
-                { id: 'faction-1', name: 'Hvězdná flotila', icon: '🚀', description: 'Průzkumná a obranná složka Federace.' },
-                { id: 'faction-2', name: 'Galaktická koalice', icon: '💥', description: 'Vojensky orientovaná organizace, bývalá Federace.' },
-                { id: 'faction-3', name: 'Kronadové', icon: '👽', description: 'Nová spojenecká rasa.' },
-                { id: 'faction-4', name: 'Xorathi', icon: '👾', description: 'Agresivní expanzivní rasa.' },
-                { id: 'faction-5', name: 'Ztracení', icon: '🕰️', description: 'Tajemní pánové času a prostoru.' },
-                { id: 'faction-6', name: 'Xindi', icon: '🦎', description: 'Rasa s komplexní historií, nyní spojenec.' },
-                { id: 'faction-7', name: 'Klingoni', icon: '⚔️', description: 'Válečnická rasa, občasný spojenec.' },
-                { id: 'faction-8', name: 'Romulani', icon: '🦅', description: 'Tajemná a nedůvěřivá rasa.' },
-                { id: 'faction-9', name: 'Andoriani', icon: '🔷', description: 'Věrní spojenci Federace.' },
-                { id: 'faction-10', name: 'Tellarité', icon: '🐷', description: 'Tvrdohlaví, ale spolehliví spojenci.' },
+                { id: 'faction-1',  name: 'Hvězdná flotila',    icon: '🚀', description: 'Průzkumná a obranná složka Federace.' },
+                { id: 'faction-2',  name: 'Galaktická koalice', icon: '💥', description: 'Vojensky orientovaná organizace, bývalá Federace.' },
+                { id: 'faction-3',  name: 'Kronadové',          icon: '👽', description: 'Nová spojenecká rasa.' },
+                { id: 'faction-4',  name: 'Xorathi',            icon: '👾', description: 'Agresivní expanzivní rasa.' },
+                { id: 'faction-5',  name: 'Ztracení',           icon: '🕰️', description: 'Tajemní pánové času a prostoru.' },
+                { id: 'faction-6',  name: 'Xindi',              icon: '🦎', description: 'Rasa s komplexní historií, nyní spojenec.' },
+                { id: 'faction-7',  name: 'Klingoni',           icon: '⚔️', description: 'Válečnická rasa, občasný spojenec.' },
+                { id: 'faction-8',  name: 'Romulani',           icon: '🦅', description: 'Tajemná a nedůvěřivá rasa.' },
+                { id: 'faction-9',  name: 'Andoriani',          icon: '🔷', description: 'Věrní spojenci Federace.' },
+                { id: 'faction-10', name: 'Tellarité',          icon: '🐷', description: 'Tvrdohlaví, ale spolehliví spojenci.' },
             ];
-            console.log('Factions data inicializována.'); // Debugging
-        }
 
+            console.log(`✅ Data inicializována - kapitol: ${storyData.chapters.length}`);
+        }
 
         function renderStoryArcs() {
             let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-white-700">Příběhové Oblouky</h2><p class="text-white-500 mt-2">Prozkoumejte ságu rozdělenou do tematických celků.</p></div>';
             html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">';
             storyData.arcs.forEach(arc => {
                 html += `
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">${arc.name}</h3>
-                        <ul class="space-y-2">
+                    <div class="arc-card">
+                        <h3>${arc.name}</h3>
+                        <ul>
                             ${arc.chapters.map(ch => `
                                 <li>
-                                    <button data-chapter-id="${ch.id}" class="chapter-btn w-full text-left text-blue-600 hover:text-blue-800 hover:underline">
+                                    <button data-chapter-id="${ch.id}" class="chapter-btn w-full text-left">
                                         ${ch.title} (Kap. ${ch.id})
                                     </button>
                                 </li>
@@ -1273,53 +825,48 @@ p {
             });
             html += '</div>';
             mainContent.innerHTML = html;
-
             document.querySelectorAll('.chapter-btn').forEach(btn => {
                 btn.addEventListener('click', () => openReader(parseInt(btn.dataset.chapterId)));
             });
-            console.log('Příběhové oblouky vykresleny.'); // Debugging
         }
-        
+
         function renderTimeline() {
-            let html = '<div class="text-center mb-12"><h2 class="text-3xl font-semibold text-white-700">Časová Osa Událostí</h2><p class="text-white-500 mt-2">Sledujte klíčové momenty příběhu v chronologickém pořadí.</p></div>';
+            let html = '<div class="text-center mb-12"><h2 class="text-3xl font-semibold">Časová Osa Událostí</h2><p class="mt-2">Sledujte klíčové momenty příběhu v chronologickém pořadí.</p></div>';
             html += '<div class="relative timeline">';
-            storyData.timeline.forEach((item, index) => {
+            storyData.timeline.forEach((item) => {
                 html += `
-                    <div class="timeline-item mb-12">
+                    <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="timeline-content flex flex-col items-start ${index % 2 !== 0 ? 'md:items-end' : ''}">
-                           <p class="text-sm text-gray-500 mb-1">${item.year}</p>
-                           <h3 class="text-xl font-semibold text-gray-800 mb-2">${item.title}</h3>
-                           <p class="text-gray-600 mb-3">${item.event}</p>
-                           <button data-chapter-id="${item.chapterId}" class="chapter-btn text-blue-600 hover:text-blue-800 font-semibold">Zobrazit kapitolu &rarr;</button>
+                        <div class="timeline-content">
+                           <p class="text-sm">${item.year}</p>
+                           <h3>${item.title}</h3>
+                           <p>${item.event}</p>
+                           <button data-chapter-id="${item.chapterId}" class="chapter-btn">Zobrazit kapitolu &rarr;</button>
                         </div>
                     </div>
                 `;
             });
             html += '</div>';
             mainContent.innerHTML = html;
-            
             document.querySelectorAll('.chapter-btn').forEach(btn => {
                 btn.addEventListener('click', () => openReader(parseInt(btn.dataset.chapterId)));
             });
-            console.log('Časová osa vykreslena.'); // Debugging
         }
-        
+
         function renderFactions() {
-            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold text-white-700">Postavy a Frakce</h2><p class="text-white-500 mt-2">Seznamte se s klíčovými hráči galaktické scény.</p></div>';
+            let html = '<div class="text-center mb-8"><h2 class="text-3xl font-semibold">Postavy a Frakce</h2><p class="mt-2">Seznamte se s klíčovými hráči galaktické scény.</p></div>';
             html += '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">';
             storyData.factions.forEach(faction => {
                 html += `
-                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                        <div class="text-4xl mb-4">${faction.icon}</div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">${faction.name}</h3>
-                        <p class="text-gray-600">${faction.description}</p>
+                    <div class="faction-card">
+                        <div class="text-4xl">${faction.icon}</div>
+                        <h3>${faction.name}</h3>
+                        <p>${faction.description}</p>
                     </div>
                 `;
             });
             html += '</div>';
             mainContent.innerHTML = html;
-            console.log('Frakce vykresleny.'); // Debugging
         }
 
         function setActiveNav(activeId) {
@@ -1328,116 +875,94 @@ p {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Nejprve načteme kapitoly z DOMu a uložíme si je do storyData.chapters
-            // A také přiřadíme audioSrc z tvého původního setupData
+
             const rawChaptersData = [
-                { id: 1, arc: "Počátek v Andromedě", title: "Časová past na Zephyrii", audioSrc: "https://www.dropbox.com/scl/fi/bski2kzexy3qdlbmgsxss/kapitola-1.wav?rlkey=na7nywvdr4qtx0r7jwd60s7it&st=ruqnq79s&dl=1", event: "Enterprise vtažena do galaxie Andromeda." },
-                { id: 2, arc: "Počátek v Andromedě", title: "Tajemství galaxie Andromeda", audioSrc: "https://www.dropbox.com/scl/fi/9jqh1qe1t4y5b1esu7z51/kapitola-2.wav?rlkey=zycm6m6prvht4g9pbe9c7relr&st=7cmik9w2&dl=1", event: "Setkání se Strážci času a 'Temným srdcem'." },
-                { id: 3, arc: "Návrat a nová Federace", title: "Návrat s otazníky", audioSrc: "https://www.dropbox.com/scl/fi/2x6h3c6wqp8k5w56g2hze/kapitola-3.wav?rlkey=83zmb0kqo1cc8gt6vffq7m0iv&st=d5wzr9w4&dl=1", event: "Návrat do budoucnosti a změněná Federace." },
-                { id: 4, arc: "Návrat a nová Federace", title: "Hlubší stíny", audioSrc: "https://www.dropbox.com/scl/fi/zqn76vdhm6nhyghpbrgwk/kapitola-4.wav?rlkey=emxpis829qzsuf12uh5ehtpt6&st=c2hn2ibb&dl=1", event: "Kontakt s Odbojovou flotilou admirála Katana." },
-                { id: 5, arc: "Návrat a nová Federace", title: "Záblesky války", audioSrc: "https://www.dropbox.com/scl/fi/h5shsqdqk94xdi34zbzq4/kapitola-5.wav?rlkey=k6r5ll0zosn5hfuzkauomqylj&st=zi9fueip&dl=1", event: "První bitva proti Galaktické koalici." },
-                { id: 6, arc: "Válka o galaxii", title: "Poslední sázka", audioSrc: "https://www.dropbox.com/scl/fi/tcsjbxiu76u8njja0xunq/kapitola-6.wav?rlkey=r3urvqteliyr6b1ydw4gnq92p&st=znvmtrjg&dl=1", event: "Mise na zničení superzbraně v mlhovině Thalax." },
-                { id: 7, arc: "Válka o galaxii", title: "Útěk před zkázou", audioSrc: "https://www.dropbox.com/scl/fi/co3yl6096mmudqiwx230m/kapitola-7.wav?rlkey=zjpxwom0xwnvl2ok9fh5s0d76&st=02qgp2xh&dl=1", event: "Útěk z explodující stanice." },
-                { id: 8, arc: "Válka o galaxii", title: "Spojenectví ve stínu války", audioSrc: "https://www.dropbox.com/scl/fi/cegy3xgjst70pc9jogera/kapitola-8.wav?rlkey=czij00yxulpzfjq3p4c6l1is6&st=zx5ermdd&dl=1", event: "Formování aliance s Klingony a Romulany." },
-                { id: 9, arc: "Válka o galaxii", title: "V srdci Romulanského impéria", audioSrc: "https://www.dropbox.com/scl/fi/wvetimvrg7gwakf7kbxu8/kapitola-9.wav?rlkey=7vvj77q7dwtgzcx0vu2a3wyob&st=p5326xlo&dl=1", event: "Jednání s Romulany a společný útok." },
-                { id: 10, arc: "Válka o galaxii", title: "Vzestup a pád", audioSrc: "https://www.dropbox.com/scl/fi/a6m4se7pg12x4c129tv78/kapitola-10.wav?rlkey=kemggsfyqpnku9kvws6lce85p&st=mupixzo9&dl=1", event: "Romulanská zrada a bitva o Acheron." },
-                { id: 11, arc: "Nové aliance", title: "Nové aliance", audioSrc: "https://www.dropbox.com/scl/fi/t41fohw659gwnv9ts71h9/kapitola-11.wav?rlkey=v6uqyy8rw8zyw4h4y6qh0ejo5&st=fo460y0e&dl=1", event: "Objevení nové civilizace a navázání spojenectví." },
-                { id: 12, arc: "Nové aliance", title: "Tíha minulosti", audioSrc: "https://www.dropbox.com/scl/fi/4n73i1lb7l482e2zy004e/kapitola-12.wav?rlkey=ri23n5qihx5ttn9dfbfmj4vpd&st=8rm5ekj0&dl=1", event: "Návrat Romulanů a obrana spojenců." },
-                { id: 13, arc: "Nové aliance", title: "Zteč na romulanskou loď", audioSrc: "https://www.dropbox.com/scl/fi/02ddw62zdgoplquykfxxk/kapitola-13.wav?rlkey=ni2vk119rhxxcfvn1i7mvk573&st=ndyqs0dt&dl=1", event: "Infiltrace nepřátelské lodi a finální souboj." },
-                { id: 14, arc: "Nové aliance", title: "Návrat domů a nové začátky", audioSrc: "https://www.dropbox.com/scl/fi/7pkmzepb7xosys65lcbzv/kapitola-14.wav?rlkey=dtx7omc81t6h16g9148kupxju&st=xve7bhkc&dl=1", event: "Pomoc nové civilizaci s budováním budoucnosti." },
-                { id: 15, arc: "Kronadská válka", title: "Návrat ke hvězdám", audioSrc: "https://www.dropbox.com/scl/fi/4s6ly2xvg8rcpre0ixvol/kapitola-15.wav?rlkey=i3hb22usknj3jdip1c7x2827g&st=qj4wnozp&dl=1", event: "Setkání s rasou Kronadů." },
-                { id: 16, arc: "Kronadská válka", title: "Setkání s neznámem", audioSrc: "https://www.dropbox.com/scl/fi/r65pmkb4ekhukgbfvij9c/kapitola-16.wav?rlkey=fnsnui4885eh4bchjw9tpjof1&st=n5aqkqk5&dl=1", event: "Odhalení hrozby Xorathů." },
-                { id: 17, arc: "Kronadská válka", title: "Rozhodující krok", audioSrc: "https://www.dropbox.com/scl/fi/8jfywr9ysalymp1ux5njw/kapitola-17.wav?rlkey=z0xdonjugsqpes594uzlvd6ly&st=ehaur0vo&dl=1", event: "Formování aliance s Kronady." },
-                { id: 18, arc: "Kronadská válka", title: "Konflikt na obzoru", audioSrc: "https://www.dropbox.com/scl/fi/vekhzjzzs2c4zeanqe6k1/kapitola-18.wav?rlkey=ch6b9eq8702k8ayrcsae3m9ky&st=pr37gftk&dl=1", event: "Strategické plánování proti Xorathům." },
-                { id: 19, arc: "Kronadská válka", title: "První úder", audioSrc: "https://www.dropbox.com/scl/fi/j3pze9vy8vle3mz5k4yq9/kapitola-19.wav?rlkey=e3q4yrqg1b413v7363aouw8ju&st=x9kzmapi&dl=1", event: "První společná bitva s Kronady proti Xorathům." },
-                { id: 20, arc: "Kronadská válka", title: "Poslední vzdor", audioSrc: "https://www.dropbox.com/scl/fi/czkzpt8pa670zxqmmu2zy/kapitola-20.wav?rlkey=lvrgdw87xf0cbfk16bnp607u2&st=z7it6xbh&dl=1", event: "Vítězství nad Xorathy." },
-                { id: 21, arc: "Záhada Ztracených", title: "Hluboký vesmír 9", audioSrc: "https://www.dropbox.com/scl/fi/a6zl9gkwgukwo3wweqdxt/kapitola-21.wav?rlkey=c2km633niog47txnsq1wgagq5&st=ooov8wfv&dl=1", event: "Přílet k DS9 a tajemný signál." },
-                { id: 22, arc: "Záhada Ztracených", title: "Brána Ztracených", audioSrc: "https://www.dropbox.com/scl/fi/ais0xn232x53mjru7vxqn/kapitola-22.wav?rlkey=0zkocz0qvhr0w6qvtk5o9bj4r&st=tj1skuq5&dl=1", event: "Aktivace prastaré brány." },
-                { id: 23, arc: "Záhada Ztracených", title: "Tajemství Ztracených", audioSrc: "https://www.dropbox.com/scl/fi/o6qrn2fwky9g9bn04a6cs/kapitola-23.wav?rlkey=edbvmbp2c14fmn5qpvb441o00&st=l73zajid&dl=1", event: "Odhalení historie pánů času a prostoru." },
-                { id: 24, arc: "Záhada Ztracených", title: "Poselství Ztracených", audioSrc: "https://www.dropbox.com/scl/fi/2nkjme6yffnp3n14l4eas/kapitola-24.wav?rlkey=piy96260mfz2x9ouv3mi1mbwa&st=0pxe4vg4&dl=1", event: "Varování a hrozba návratu." },
-                { id: 25, arc: "Záhada Ztracených", title: "Bitva o Deep Space Nine", audioSrc: "https://www.dropbox.com/scl/fi/rpo3ub7ht4i7wmoxg9gwa/kapitola-25.wav?rlkey=g9fr7ptqpni2g9fxh1l3ypxr3&st=46ak8ogx&dl=1", event: "Obrana stanice proti flotile Ztracených." },
-                { id: 26, arc: "Záhada Ztracených", title: "Temnota před Úsvitem", audioSrc: "https://www.dropbox.com/scl/fi/xeehdcepeoxaajh0obtre/kapitola-26.wav?rlkey=7xyvh161eub801pmsnrji04n5&st=z6rzprdp&dl=1", event: "Objevení a zničení mateřské lodi." },
-                { id: 27, arc: "Záhada Ztracených", title: "Nové začátky", audioSrc: "https://www.dropbox.com/scl/fi/9d8eeyrzvusnlact95nyp/kapitola-27.wav?rlkey=rs19d8sh1bm77lelffqj3yf0h&st=oolyu5bz&dl=1", event: "Konec hrozby a oslavy." },
-                { id: 28, arc: "Nový nepřítel", title: "Nové setkání s Xindi", audioSrc: "https://www.dropbox.com/scl/fi/lw1507xu08nf63sx9oa2e/kapitola-28.wav?rlkey=rrn05voaq9rlz4hyhzw74zo6d&st=1wbms1cs&dl=1", event: "Prosba o pomoc od Xindi." },
-                { id: 29, arc: "Nový nepřítel", title: "Společný nepřítel", audioSrc: "https://www.dropbox.com/scl/fi/0ehmov74ezr0niu547ynl/kapitola-29.wav?rlkey=aod59rg2wmjy0m8m8a9mac710&st=qt06ej4c&dl=1", event: "Formování nové aliance proti vetřelcům." },
-                { id: 30, arc: "Nový nepřítel", title: "Rozhodující střetnutí", audioSrc: "https://www.dropbox.com/scl/fi/db0z6gwap5wto89hpdh2q/kapitola-30.wav?rlkey=fp9jg33batmt46qh1s9nzbsc0&st=5y9ia9jx&dl=1", event: "Vítězná bitva spojené flotily." },
-                { id: 31, arc: "Křehký mír", title: "Střetnutí s Klingony, Andoriany, Romulany", audioSrc: "https://www.dropbox.com/scl/fi/vxrslv8fb4krf1fpqfjjt/kapitola-31.wav?rlkey=iy4cbqpnm7spyjpe384q8ymvv&st=hhehcdtm&dl=1", event: "Politické napětí a diplomatická jednání." },
-                { id: 32, arc: "Konvergence generací", title: "Spojení Voyageru a Enterprise-D", audioSrc: "https://www.dropbox.com/scl/fi/vbwtb1jrp9qtnxldl1dk3/kapitola-32.wav?rlkey=9g7h9v6u6w8trh6ngq3kw9zig&st=4odlpeq7&dl=1", event: "Setkání Voyageru a Enterprise-D u časoprostorové anomálie." },
-                { id: 33, arc: "Konvergence generací", title: "Návrat Enterprise NX-01", audioSrc: "https://www.dropbox.com/scl/fi/w12vncdcwkvvlb2rvgv91/kapitola-33.wav?rlkey=dqm0o1j8dfy8j491xycz5m5xa&st=t37ii1rr&dl=1", event: "Objevení ztracené lodi NX-01." },
-                { id: 34, arc: "Konvergence generací", title: "Tajemství prastaré civilizace", audioSrc: "https://www.dropbox.com/scl/fi/ts4iecs4b5g2jooyk40xd/kapitola-34.wav?rlkey=msgg6a8wny8p3rs73eoh9e1r1&st=nuc6bt20&dl=1", event: "Odhalení technologie ovládající časoprostor." },
-                { id: 35, arc: "Konvergence generací", title: "Hrozba z temnoty", audioSrc: "https://www.dropbox.com/scl/fi/u5umgelznk837b02233qt/kapitola-35.wav?rlkey=l613fq5r7ugx33t25ykz6ckl4&st=clmi9gt1&dl=1", event: "Zrádný admirál a válka s temnou flotilou." },
-                { id: 36, arc: "Konvergence generací", title: "Nové obzory", audioSrc: "https://www.dropbox.com/scl/fi/azn1401i2tsdyzancxntc/kapitola-36.wav?rlkey=fqoqnolf6tp2xlgbihc1uu8v1&st=h15tua5f&dl=1", event: "Rekonstrukce a nová spojenectví po válce." },
-                { id: 37, arc: "Válka strojů", title: "Nové Hrozby", audioSrc: "https://www.dropbox.com/scl/fi/futnm4de91g7h7p3wdnfi/kapitola-37.wav?rlkey=2lxjgnif2p69m05opdv8cicso&st=duwlnbvt&dl=1", event: "Útoky umělé inteligence z jiné dimenze." },
-                { id: 38, arc: "Válka strojů", title: "Společné velení", audioSrc: "https://www.dropbox.com/scl/fi/p0tzlrzqj6er1j56b7prt/kapitola-38.wav?rlkey=lnbu8a9qpvu7h3okcuh4lrvd5&st=0id8ccwb&dl=1", event: "Pokus o vyjednávání se stroji." },
-                { id: 39, arc: "Válka strojů", title: "Aliance na pokraji zkázy", audioSrc: "https://www.dropbox.com/scl/fi/brgz7nh2es7ck9ubt08yg/kapitola-39.wav?rlkey=d2svq670defuk8feoesusedip&st=sbd9ngfz&dl=1", event: "Romulanská zrada a ultimátum od strojů." },
-                { id: 40, arc: "Válka strojů", title: "Velké oslavy", audioSrc: "https://www.dropbox.com/scl/fi/jnatm6xldsffkvgbyscd9/kapitola-40.wav?rlkey=5ewmyq66dz5jkn1a6tkbj1nae&st=gl4jd6yx&dl=1", event: "Vítězství a oslavy na Deep Space Nine." },
-                
-                { id: 41, arc: "Nová Era", title: "Odkaz Hvězdné flotily", audioSrc: " ", event: "Nová era začíná" },
-                
-                { id: 42, arc: "Nová Era", title: "Temné horizonty", audioSrc: " ", event: "Náhlý signál" },
-                
-                { id: 43, arc: "Nová Era", title: "Vzestup symbiontů", audioSrc: " ", event: "Vzestup symbiontů" },
-                
-                { id: 44, arc: "Nová Era", title: "Stín Xar’Vaaků", audioSrc: " ", event: "Klid před bouří" },
-                
-                { id: 45, arc: "Nová Era 2", title: "Temnota za horizontem", audioSrc: " ", event: "Roztržená hranice" },
-                
-                { id: 46, arc: "Nová Era 2", title: "Když světlo pálí", audioSrc: " ", event: "První úder" },
-                
-                { id: 47, arc: "Nová Era 2", title: "Echo NX-01", audioSrc: " ", event: "Slabý šepot v tichu" },
-                
-                { id: 48, arc: "Nová Era 2", title: "Ozvěny a temný dar", audioSrc: " ", event: "Hluk po tichu" },
-                
-                { id: 49, arc: "Nová Era 3", title: "Stíny nad Nocturne", audioSrc: " ", event: "Mlha z dávných časů" },
-                
-                { id: 50, arc: "Nová Era 3", title: "Hranice neznáma", audioSrc: " ", event: "Tichá bouře" },
+                { id: 1,  arc: "Počátek v Andromedě",      title: "Časová past na Zephyrii",                   audioSrc: "https://dl.dropboxusercontent.com/scl/fi/bski2kzexy3qdlbmgsxss/kapitola-1.wav?rlkey=na7nywvdr4qtx0r7jwd60s7it&st=ruqnq79s&dl=1",   event: "Enterprise vtažena do galaxie Andromeda.", manuallyEdited: false, lastEditedAt: null },
+                { id: 2,  arc: "Počátek v Andromedě",      title: "Tajemství galaxie Andromeda",               audioSrc: "https://dl.dropboxusercontent.com/scl/fi/9jqh1qe1t4y5b1esu7z51/kapitola-2.wav?rlkey=zycm6m6prvht4g9pbe9c7relr&st=7cmik9w2&dl=1",   event: "Setkání se Strážci času a 'Temným srdcem'.", manuallyEdited: false, lastEditedAt: null },
+                { id: 3,  arc: "Návrat a nová Federace",   title: "Návrat s otazníky",                         audioSrc: "https://dl.dropboxusercontent.com/scl/fi/2x6h3c6wqp8k5w56g2hze/kapitola-3.wav?rlkey=83zmb0kqo1cc8gt6vffq7m0iv&st=d5wzr9w4&dl=1",   event: "Návrat do budoucnosti a změněná Federace.", manuallyEdited: false, lastEditedAt: null },
+                { id: 4,  arc: "Návrat a nová Federace",   title: "Hlubší stíny",                              audioSrc: "https://dl.dropboxusercontent.com/scl/fi/zqn76vdhm6nhyghpbrgwk/kapitola-4.wav?rlkey=emxpis829qzsuf12uh5ehtpt6&st=c2hn2ibb&dl=1",   event: "Kontakt s Odbojovou flotilou admirála Katana.", manuallyEdited: false, lastEditedAt: null },
+                { id: 5,  arc: "Návrat a nová Federace",   title: "Záblesky války",                            audioSrc: "https://dl.dropboxusercontent.com/scl/fi/h5shsqdqk94xdi34zbzq4/kapitola-5.wav?rlkey=k6r5ll0zosn5hfuzkauomqylj&st=zi9fueip&dl=1",   event: "První bitva proti Galaktické koalici.", manuallyEdited: false, lastEditedAt: null },
+                { id: 6,  arc: "Válka o galaxii",          title: "Poslední sázka",                            audioSrc: "https://dl.dropboxusercontent.com/scl/fi/tcsjbxiu76u8njja0xunq/kapitola-6.wav?rlkey=r3urvqteliyr6b1ydw4gnq92p&st=znvmtrjg&dl=1",   event: "Mise na zničení superzbraně v mlhovině Thalax.", manuallyEdited: false, lastEditedAt: null },
+                { id: 7,  arc: "Válka o galaxii",          title: "Útěk před zkázou",                          audioSrc: "https://dl.dropboxusercontent.com/scl/fi/co3yl6096mmudqiwx230m/kapitola-7.wav?rlkey=zjpxwom0xwnvl2ok9fh5s0d76&st=02qgp2xh&dl=1",   event: "Útěk z explodující stanice.", manuallyEdited: false, lastEditedAt: null },
+                { id: 8,  arc: "Válka o galaxii",          title: "Spojenectví ve stínu války",                audioSrc: "https://dl.dropboxusercontent.com/scl/fi/cegy3xgjst70pc9jogera/kapitola-8.wav?rlkey=czij00yxulpzfjq3p4c6l1is6&st=zx5ermdd&dl=1",   event: "Formování aliance s Klingony a Romulany.", manuallyEdited: false, lastEditedAt: null },
+                { id: 9,  arc: "Válka o galaxii",          title: "V srdci Romulanského impéria",              audioSrc: "https://dl.dropboxusercontent.com/scl/fi/wvetimvrg7gwakf7kbxu8/kapitola-9.wav?rlkey=7vvj77q7dwtgzcx0vu2a3wyob&st=p5326xlo&dl=1",   event: "Jednání s Romulany a společný útok.", manuallyEdited: false, lastEditedAt: null },
+                { id: 10, arc: "Válka o galaxii",          title: "Vzestup a pád",                             audioSrc: "https://dl.dropboxusercontent.com/scl/fi/a6m4se7pg12x4c129tv78/kapitola-10.wav?rlkey=kemggsfyqpnku9kvws6lce85p&st=mupixzo9&dl=1",  event: "Romulanská zrada a bitva o Acheron.", manuallyEdited: false, lastEditedAt: null },
+                { id: 11, arc: "Nové aliance",             title: "Nové aliance",                              audioSrc: "https://dl.dropboxusercontent.com/scl/fi/t41fohw659gwnv9ts71h9/kapitola-11.wav?rlkey=v6uqyy8rw8zyw4h4y6qh0ejo5&st=fo460y0e&dl=1",  event: "Objevení nové civilizace a navázání spojenectví.", manuallyEdited: false, lastEditedAt: null },
+                { id: 12, arc: "Nové aliance",             title: "Tíha minulosti",                            audioSrc: "https://dl.dropboxusercontent.com/scl/fi/4n73i1lb7l482e2zy004e/kapitola-12.wav?rlkey=ri23n5qihx5ttn9dfbfmj4vpd&st=8rm5ekj0&dl=1",  event: "Návrat Romulanů a obrana spojenců.", manuallyEdited: false, lastEditedAt: null },
+                { id: 13, arc: "Nové aliance",             title: "Zteč na romulanskou loď",                   audioSrc: "https://dl.dropboxusercontent.com/scl/fi/02ddw62zdgoplquykfxxk/kapitola-13.wav?rlkey=ni2vk119rhxxcfvn1i7mvk573&st=ndyqs0dt&dl=1",  event: "Infiltrace nepřátelské lodi a finální souboj.", manuallyEdited: false, lastEditedAt: null },
+                { id: 14, arc: "Nové aliance",             title: "Návrat domů a nové začátky",                audioSrc: "https://dl.dropboxusercontent.com/scl/fi/7pkmzepb7xosys65lcbzv/kapitola-14.wav?rlkey=dtx7omc81t6h16g9148kupxju&st=xve7bhkc&dl=1",  event: "Pomoc nové civilizaci s budováním budoucnosti.", manuallyEdited: false, lastEditedAt: null },
+                { id: 15, arc: "Kronadská válka",          title: "Návrat ke hvězdám",                         audioSrc: "https://dl.dropboxusercontent.com/scl/fi/4s6ly2xvg8rcpre0ixvol/kapitola-15.wav?rlkey=i3hb22usknj3jdip1c7x2827g&st=qj4wnozp&dl=1",  event: "Setkání s rasou Kronadů.", manuallyEdited: false, lastEditedAt: null },
+                { id: 16, arc: "Kronadská válka",          title: "Setkání s neznámem",                        audioSrc: "https://dl.dropboxusercontent.com/scl/fi/r65pmkb4ekhukgbfvij9c/kapitola-16.wav?rlkey=fnsnui4885eh4bchjw9tpjof1&st=n5aqkqk5&dl=1",  event: "Odhalení hrozby Xorathů.", manuallyEdited: false, lastEditedAt: null },
+                { id: 17, arc: "Kronadská válka",          title: "Rozhodující krok",                          audioSrc: "https://dl.dropboxusercontent.com/scl/fi/8jfywr9ysalymp1ux5njw/kapitola-17.wav?rlkey=z0xdonjugsqpes594uzlvd6ly&st=ehaur0vo&dl=1",  event: "Formování aliance s Kronady.", manuallyEdited: false, lastEditedAt: null },
+                { id: 18, arc: "Kronadská válka",          title: "Konflikt na obzoru",                        audioSrc: "https://dl.dropboxusercontent.com/scl/fi/vekhzjzzs2c4zeanqe6k1/kapitola-18.wav?rlkey=ch6b9eq8702k8ayrcsae3m9ky&st=pr37gftk&dl=1",  event: "Strategické plánování proti Xorathům.", manuallyEdited: false, lastEditedAt: null },
+                { id: 19, arc: "Kronadská válka",          title: "První úder",                                audioSrc: "https://dl.dropboxusercontent.com/scl/fi/j3pze9vy8vle3mz5k4yq9/kapitola-19.wav?rlkey=e3q4yrqg1b413v7363aouw8ju&st=x9kzmapi&dl=1",  event: "První společná bitva s Kronady proti Xorathům.", manuallyEdited: false, lastEditedAt: null },
+                { id: 20, arc: "Kronadská válka",          title: "Poslední vzdor",                            audioSrc: "https://dl.dropboxusercontent.com/scl/fi/czkzpt8pa670zxqmmu2zy/kapitola-20.wav?rlkey=lvrgdw87xf0cbfk16bnp607u2&st=z7it6xbh&dl=1",  event: "Vítězství nad Xorathy.", manuallyEdited: false, lastEditedAt: null },
+                { id: 21, arc: "Záhada Ztracených",        title: "Hluboký vesmír 9",                          audioSrc: "https://dl.dropboxusercontent.com/scl/fi/a6zl9gkwgukwo3wweqdxt/kapitola-21.wav?rlkey=c2km633niog47txnsq1wgagq5&st=ooov8wfv&dl=1",  event: "Přílet k DS9 a tajemný signál.", manuallyEdited: false, lastEditedAt: null },
+                { id: 22, arc: "Záhada Ztracených",        title: "Brána Ztracených",                          audioSrc: "https://dl.dropboxusercontent.com/scl/fi/ais0xn232x53mjru7vxqn/kapitola-22.wav?rlkey=0zkocz0qvhr0w6qvtk5o9bj4r&st=tj1skuq5&dl=1",  event: "Aktivace prastaré brány.", manuallyEdited: false, lastEditedAt: null },
+                { id: 23, arc: "Záhada Ztracených",        title: "Tajemství Ztracených",                      audioSrc: "https://dl.dropboxusercontent.com/scl/fi/o6qrn2fwky9g9bn04a6cs/kapitola-23.wav?rlkey=edbvmbp2c14fmn5qpvb441o00&st=l73zajid&dl=1",  event: "Odhalení historie pánů času a prostoru.", manuallyEdited: false, lastEditedAt: null },
+                { id: 24, arc: "Záhada Ztracených",        title: "Poselství Ztracených",                      audioSrc: "https://dl.dropboxusercontent.com/scl/fi/2nkjme6yffnp3n14l4eas/kapitola-24.wav?rlkey=piy96260mfz2x9ouv3mi1mbwa&st=0pxe4vg4&dl=1",  event: "Varování a hrozba návratu.", manuallyEdited: false, lastEditedAt: null },
+                { id: 25, arc: "Záhada Ztracených",        title: "Bitva o Deep Space Nine",                   audioSrc: "https://dl.dropboxusercontent.com/scl/fi/rpo3ub7ht4i7wmoxg9gwa/kapitola-25.wav?rlkey=g9fr7ptqpni2g9fxh1l3ypxr3&st=46ak8ogx&dl=1",  event: "Obrana stanice proti flotile Ztracených.", manuallyEdited: false, lastEditedAt: null },
+                { id: 26, arc: "Záhada Ztracených",        title: "Temnota před Úsvitem",                      audioSrc: "https://dl.dropboxusercontent.com/scl/fi/xeehdcepeoxaajh0obtre/kapitola-26.wav?rlkey=7xyvh161eub801pmsnrji04n5&st=z6rzprdp&dl=1",  event: "Objevení a zničení mateřské lodi.", manuallyEdited: false, lastEditedAt: null },
+                { id: 27, arc: "Záhada Ztracených",        title: "Nové začátky",                              audioSrc: "https://dl.dropboxusercontent.com/scl/fi/9d8eeyrzvusnlact95nyp/kapitola-27.wav?rlkey=rs19d8sh1bm77lelffqj3yf0h&st=oolyu5bz&dl=1",  event: "Konec hrozby a oslavy.", manuallyEdited: false, lastEditedAt: null },
+                { id: 28, arc: "Nový nepřítel",            title: "Nové setkání s Xindi",                      audioSrc: "https://dl.dropboxusercontent.com/scl/fi/lw1507xu08nf63sx9oa2e/kapitola-28.wav?rlkey=rrn05voaq9rlz4hyhzw74zo6d&st=1wbms1cs&dl=1",  event: "Prosba o pomoc od Xindi.", manuallyEdited: false, lastEditedAt: null },
+                { id: 29, arc: "Nový nepřítel",            title: "Společný nepřítel",                         audioSrc: "https://dl.dropboxusercontent.com/scl/fi/0ehmov74ezr0niu547ynl/kapitola-29.wav?rlkey=aod59rg2wmjy0m8m8a9mac710&st=qt06ej4c&dl=1",  event: "Formování nové aliance proti vetřelcům.", manuallyEdited: false, lastEditedAt: null },
+                { id: 30, arc: "Nový nepřítel",            title: "Rozhodující střetnutí",                     audioSrc: "https://dl.dropboxusercontent.com/scl/fi/db0z6gwap5wto89hpdh2q/kapitola-30.wav?rlkey=fp9jg33batmt46qh1s9nzbsc0&st=5y9ia9jx&dl=1",  event: "Vítězná bitva spojené flotily.", manuallyEdited: false, lastEditedAt: null },
+                { id: 31, arc: "Křehký mír",               title: "Střetnutí s Klingony, Andoriany, Romulany", audioSrc: "https://dl.dropboxusercontent.com/scl/fi/vxrslv8fb4krf1fpqfjjt/kapitola-31.wav?rlkey=iy4cbqpnm7spyjpe384q8ymvv&st=hhehcdtm&dl=1",  event: "Politické napětí a diplomatická jednání.", manuallyEdited: false, lastEditedAt: null },
+                { id: 32, arc: "Konvergence generací",     title: "Spojení Voyageru a Enterprise-D",           audioSrc: "https://dl.dropboxusercontent.com/scl/fi/vbwtb1jrp9qtnxldl1dk3/kapitola-32.wav?rlkey=9g7h9v6u6w8trh6ngq3kw9zig&st=4odlpeq7&dl=1",  event: "Setkání Voyageru a Enterprise-D u časoprostorové anomálie.", manuallyEdited: false, lastEditedAt: null },
+                { id: 33, arc: "Konvergence generací",     title: "Návrat Enterprise NX-01",                   audioSrc: "https://dl.dropboxusercontent.com/scl/fi/w12vncdcwkvvlb2rvgv91/kapitola-33.wav?rlkey=dqm0o1j8dfy8j491xycz5m5xa&st=t37ii1rr&dl=1",  event: "Objevení ztracené lodi NX-01.", manuallyEdited: false, lastEditedAt: null },
+                { id: 34, arc: "Konvergence generací",     title: "Tajemství prastaré civilizace",             audioSrc: "https://dl.dropboxusercontent.com/scl/fi/ts4iecs4b5g2jooyk40xd/kapitola-34.wav?rlkey=msgg6a8wny8p3rs73eoh9e1r1&st=nuc6bt20&dl=1",  event: "Odhalení technologie ovládající časoprostor.", manuallyEdited: false, lastEditedAt: null },
+                { id: 35, arc: "Konvergence generací",     title: "Hrozba z temnoty",                          audioSrc: "https://dl.dropboxusercontent.com/scl/fi/u5umgelznk837b02233qt/kapitola-35.wav?rlkey=l613fq5r7ugx33t25ykz6ckl4&st=clmi9gt1&dl=1",  event: "Zrádný admirál a válka s temnou flotilou.", manuallyEdited: false, lastEditedAt: null },
+                { id: 36, arc: "Konvergence generací",     title: "Nové obzory",                               audioSrc: "https://dl.dropboxusercontent.com/scl/fi/azn1401i2tsdyzancxntc/kapitola-36.wav?rlkey=fqoqnolf6tp2xlgbihc1uu8v1&st=h15tua5f&dl=1",  event: "Rekonstrukce a nová spojenectví po válce.", manuallyEdited: false, lastEditedAt: null },
+                { id: 37, arc: "Válka strojů",             title: "Nové Hrozby",                               audioSrc: "https://dl.dropboxusercontent.com/scl/fi/futnm4de91g7h7p3wdnfi/kapitola-37.wav?rlkey=2lxjgnif2p69m05opdv8cicso&st=duwlnbvt&dl=1",  event: "Útoky umělé inteligence z jiné dimenze.", manuallyEdited: false, lastEditedAt: null },
+                { id: 38, arc: "Válka strojů",             title: "Společné velení",                           audioSrc: "https://dl.dropboxusercontent.com/scl/fi/p0tzlrzqj6er1j56b7prt/kapitola-38.wav?rlkey=lnbu8a9qpvu7h3okcuh4lrvd5&st=0id8ccwb&dl=1",  event: "Pokus o vyjednávání se stroji.", manuallyEdited: false, lastEditedAt: null },
+                { id: 39, arc: "Válka strojů",             title: "Aliance na pokraji zkázy",                  audioSrc: "https://dl.dropboxusercontent.com/scl/fi/brgz7nh2es7ck9ubt08yg/kapitola-39.wav?rlkey=d2svq670defuk8feoesusedip&st=sbd9ngfz&dl=1",  event: "Romulanská zrada a ultimátum od strojů.", manuallyEdited: false, lastEditedAt: null },
+                { id: 40, arc: "Válka strojů",             title: "Velké oslavy",                              audioSrc: "https://dl.dropboxusercontent.com/scl/fi/jnatm6xldsffkvgbyscd9/kapitola-40.wav?rlkey=5ewmyq66dz5jkn1a6tkbj1nae&st=gl4jd6yx&dl=1",  event: "Vítězství a oslavy na Deep Space Nine.", manuallyEdited: false, lastEditedAt: null },
+                { id: 41, arc: "Nová Era",   title: "Odkaz Hvězdné flotily",  audioSrc: " ", event: "Nová era začíná", manuallyEdited: false, lastEditedAt: null },
+                { id: 42, arc: "Nová Era",   title: "Temné horizonty",        audioSrc: " ", event: "Náhlý signál", manuallyEdited: false, lastEditedAt: null },
+                { id: 43, arc: "Nová Era",   title: "Vzestup symbiontů",      audioSrc: " ", event: "Vzestup symbiontů", manuallyEdited: false, lastEditedAt: null },
+                { id: 44, arc: "Nová Era",   title: "Stín Xar'Vaaků",         audioSrc: " ", event: "Klid před bouří", manuallyEdited: false, lastEditedAt: null },
+                { id: 45, arc: "Nová Era 2", title: "Temnota za horizontem",  audioSrc: " ", event: "Roztržená hranice", manuallyEdited: false, lastEditedAt: null },
+                { id: 46, arc: "Nová Era 2", title: "Když světlo pálí",       audioSrc: " ", event: "První úder", manuallyEdited: false, lastEditedAt: null },
+                { id: 47, arc: "Nová Era 2", title: "Echo NX-01",             audioSrc: " ", event: "Slabý šepot v tichu", manuallyEdited: false, lastEditedAt: null },
+                { id: 48, arc: "Nová Era 2", title: "Ozvěny a temný dar",     audioSrc: " ", event: "Hluk po tichu", manuallyEdited: false, lastEditedAt: null },
+                { id: 49, arc: "Nová Era 3", title: "Stíny nad Nocturne",     audioSrc: " ", event: "Mlha z dávných časů", manuallyEdited: false, lastEditedAt: null },
+                { id: 50, arc: "Nová Era 3", title: "Hranice neznáma",        audioSrc: " ", event: "Tichá bouře", manuallyEdited: false, lastEditedAt: null },
             ];
 
-            // Projdeme data z rawChaptersData a doplníme je obsahem z DOMu
             rawChaptersData.forEach(chData => {
                 const chapterEl = document.getElementById(`chapter${chData.id}`);
-                if (chapterEl) {
-                    // Pokud prvek existuje, vezmeme jeho HTML obsah
-                    chData.content = chapterEl.innerHTML;
-                } else {
-                    // Pokud prvek neexistuje (chyba v HTML nebo ID), dáme fallback
-                    chData.content = `<p>Obsah kapitoly ${chData.id} se nepodařilo načíst z HTML. Zkontrolujte prosím, zda existuje div s id="chapter${chData.id}".</p>`;
-                    console.warn(`HTML element pro kapitolu ${chData.id} nebyl nalezen!`);
-                }
+                chData.content = chapterEl
+                    ? chapterEl.innerHTML
+                    : `<p>Obsah kapitoly ${chData.id} se nepodařilo načíst.</p>`;
+                if (!chapterEl) console.warn(`⚠️ HTML element pro kapitolu ${chData.id} nebyl nalezen!`);
                 storyData.chapters.push(chData);
             });
-            console.log('Kapitoly načteny z DOMu a inicializovány:', storyData.chapters.length, 'kapitol.'); // Debugging
-            
-            // Teď inicializujeme ostatní sekce na základě nově naplněných kapitol
-            initializeSectionsData(); 
+
+            console.log(`✅ Načteno ${storyData.chapters.length} kapitol z DOMu.`);
+            initializeSectionsData();
 
             // Nav buttons
-            const navArcsBtn = document.getElementById('nav-arcs');
-            const navTimelineBtn = document.getElementById('nav-timeline');
-            const navFactionsBtn = document.getElementById('nav-factions');
+            document.getElementById('nav-arcs').addEventListener('click',     () => { renderStoryArcs(); setActiveNav('nav-arcs'); });
+            document.getElementById('nav-timeline').addEventListener('click', () => { renderTimeline();   setActiveNav('nav-timeline'); });
+            document.getElementById('nav-factions').addEventListener('click', () => { renderFactions();   setActiveNav('nav-factions'); });
 
-            navArcsBtn.addEventListener('click', () => {
-                renderStoryArcs();
-                setActiveNav('nav-arcs');
-            });
-            navTimelineBtn.addEventListener('click', () => {
-                renderTimeline();
-                setActiveNav('nav-timeline');
-            });
-            navFactionsBtn.addEventListener('click', () => {
-                renderFactions();
-                setActiveNav('nav-factions');
-            });
-            
-            // Reader panel controls
+            // Reader controls
             readerCloseBtn.addEventListener('click', closeReader);
-            readerOverlay.addEventListener('click', closeReader); // Zavřít kliknutím mimo panel
+            readerOverlay.addEventListener('click',  closeReader);
 
-            // Audio player controls
+            // Audio play/pause – funguje i po stopAudio!
             playPauseBtn.addEventListener('click', () => {
-                if (currentAudio) {
+                if (!currentAudio && currentChapterAudioSrc) {
+                    // Po stopAudio – znovu vytvoříme instanci ze zapamatované src
+                    const audio = new Audio(currentChapterAudioSrc);
+                    currentAudio = audio;
+                    attachAudioCallbacks(audio);
+                    audio.play().catch(e => console.warn('⚠️ Play selhal:', e.message));
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                } else if (currentAudio) {
                     if (currentAudio.paused) {
-                        currentAudio.play();
+                        currentAudio.play().catch(e => console.warn('⚠️ Play selhal:', e.message));
                         playIcon.classList.add('hidden');
                         pauseIcon.classList.remove('hidden');
                     } else {
@@ -1451,17 +976,22 @@ p {
             stopBtn.addEventListener('click', stopAudio);
 
             progressBar.addEventListener('input', (e) => {
-                if(currentAudio) {
-                    currentAudio.currentTime = e.target.value;
-                }
+                if (currentAudio) currentAudio.currentTime = e.target.value;
             });
 
-            // Initial render
-            renderStoryArcs();
-            setActiveNav('nav-arcs'); // Nastavit aktivní tlačítko na začátku
-        });
+            // === ZÁVĚREČNÉ HLÁŠENÍ Z MŮSTKU ===
+            console.log("🚀 INDEX.JS VERZE 2 - HLÁŠENÍ Z MŮSTKU");
+            console.log("📦 Kapitoly načteny       : z DOMu");
+            console.log("🎵 Audio funkce           : aktivní + play po stop opraven");
+            console.log("🔧 URL konverze           : 2026 protokol");
+            console.log("🛡️  Error handling         : aktivní");
+            console.log(`✅ Celkem kapitol         : ${storyData.chapters.length}`);
+            console.log("🖖 Hvězdná flotila online!");
 
-    </script>
+            renderStoryArcs();
+            setActiveNav('nav-arcs');
+        });
+</script>
     
     <!-- Original chapter content hidden for JS to pick up -->
     <div id="original-content" style="display: none;">
