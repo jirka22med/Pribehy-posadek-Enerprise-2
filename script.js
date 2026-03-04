@@ -3,7 +3,7 @@
             arcs: [],
             timeline: [],
             factions: []
-        };
+        };  
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
@@ -373,4 +373,5 @@ progressBar.addEventListener('input', (e) => {
 
             renderStoryArcs();
             setActiveNav('nav-arcs');
+
         });
