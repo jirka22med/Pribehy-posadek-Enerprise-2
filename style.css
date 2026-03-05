@@ -68,6 +68,7 @@ body {
 #app { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
 
 /* === HEADER === */
+/* === HEADER === */
 header {
     text-align: center;
     margin-bottom: 3rem;
@@ -83,17 +84,30 @@ header::after {
     transform: translateX(-50%);
     width: 120px;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    background: linear-gradient(90deg, transparent, #FF4500, transparent);
 }
 header h1:first-child {
-    font-family: var(--font-title);
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 900;
-    letter-spacing: 4px;
+    font-family: "Rubik Microbe", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    letter-spacing: 5px;
     text-transform: uppercase;
-    color: var(--gold) !important;
-    -webkit-text-fill-color: var(--gold) !important;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    color: #FFD700 !important;
+    -webkit-text-fill-color: #FFD700 !important;
+    text-shadow:
+        1px 1px 0px #FF9900,
+        2px 2px 0px #EE7700,
+        3px 3px 0px #CC5500,
+        4px 4px 0px #AA3300,
+        5px 5px 0px #881100,
+        6px 6px 0px #660000,
+        7px 7px 0px #440000,
+        0 0 5px  #FFD700,
+        0 0 15px #FFD700,
+        0 0 25px #FF8C00,
+        0 0 40px #FF4500,
+        0 0 60px #FF2200,
+        0 0 80px rgba(255, 34, 0, 0.4);
     margin-bottom: 0.5rem;
     background: none !important;
 }
@@ -120,9 +134,9 @@ nav {
     box-shadow: 0 0 25px rgba(0, 20, 60, 0.6), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 .main-nav-btn {
-    font-family: var(--font-title);
-    font-size: 0.68rem;
-    font-weight: 600;
+    font-family: "Irish Grover", system-ui; /**/
+  font-weight: 400;
+  font-style: normal; /**/
     letter-spacing: 1.5px;
     text-transform: uppercase;
     padding: 10px 18px;
