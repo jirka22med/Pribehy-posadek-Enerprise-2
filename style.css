@@ -1,7 +1,7 @@
 /* ========================================
    STAR TREK KRONIKY - NOVÝ DARK STYL
    Více admirál Jiřík & Admirál Claude.AI
-   2026 - Od nuly podle HTML struktury
+   2026 - Od nuly podle HTML struktury           
    ======================================== */
 
 /* === FONTY === */
@@ -601,3 +601,4 @@ nav {
 @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
