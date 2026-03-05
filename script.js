@@ -3,7 +3,7 @@
             arcs: [],
             timeline: [],
             factions: []
-        };  
+        };
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
@@ -81,8 +81,8 @@
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 currentAudio = null;
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+             //   playIcon.classList.remove('hidden');
+              //  pauseIcon.classList.add('hidden');
                 progressBar.value         = 0;
                 currentTimeEl.textContent = '0:00';
                 // ✅ durationEl NECHÁVÁME – délka zůstane zobrazená po zastavení!
@@ -319,9 +319,14 @@
             document.getElementById('nav-timeline').addEventListener('click', () => { renderTimeline();   setActiveNav('nav-timeline'); });
             document.getElementById('nav-factions').addEventListener('click', () => { renderFactions();   setActiveNav('nav-factions'); });
 
-            // Reader controls
-            readerCloseBtn.addEventListener('click', closeReader);
-            readerOverlay.addEventListener('click',  closeReader);
+             
+         
+// Reader controls
+readerCloseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeReader();
+});
+readerOverlay.addEventListener('click', closeReader);
 
             // Audio play/pause – funguje i po stopAudio!
             // === AKTUALIZOVANÉ AUDIO LISTENERY ===
@@ -373,5 +378,4 @@ progressBar.addEventListener('input', (e) => {
 
             renderStoryArcs();
             setActiveNav('nav-arcs');
-
         });
